@@ -1,13 +1,14 @@
 from ..coords import Coords
-from ..metadata import zone_metadata
+from ..metadata.zone_metadata import ZoneMetadata
+from ..network_object import NetworkObject
 
 
-class Zone:
+class Zone(NetworkObject):
     def __init__(
                 self,
                 name: str,
                 coords: Coords,
-                metadata: zone_metadata
+                metadata: ZoneMetadata
             ):
         self.name: str = name
-        self.metadata: zone_metadata = metadata
+        self.metadata: ZoneMetadata = metadata

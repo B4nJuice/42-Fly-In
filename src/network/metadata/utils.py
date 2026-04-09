@@ -28,7 +28,7 @@ class MetadataUtils:
             key, value = data.split("=")
             if key in metadata_dict.keys():
                 raise MetadataError(f"duplicate key in metadata: {key}.")
-            metadata_dict.update({key, value})
+            metadata_dict.update({key: value})
 
         return metadata_dict
 
@@ -43,7 +43,7 @@ class MetadataUtils:
         for key, value in metadata.items():
             try:
                 converted_metadata.update(
-                        {key: types.get(key, lambda x: x)}(value)
+                        {key: types.get(key, lambda x: x)(value)}
                     )
             except Exception as e:
                 raise ConversionError(f"key: {key}, value:{value} {e}")
