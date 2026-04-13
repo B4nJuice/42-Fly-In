@@ -1,8 +1,9 @@
 from typing import Any
 from .utils import MetadataUtils, MetadataError
+from .metadata_interface import MetadataInterface
 
 
-class ZoneMetadata:
+class ZoneMetadata(MetadataInterface):
     def __init__(self, metadata: str) -> None:
         self.default_metadata: dict[str, Any] = {
             "zone": "normal",
@@ -23,14 +24,15 @@ class ZoneMetadata:
         )
 
         self.metadata: dict[str, Any] = {}
-        self.default_metadata.update(converted_metadata)
+        self.metadata.update(self.default_metadata)
+        self.metadata.update(converted_metadata)
 
         self.start_hub: bool = False
         self.end_hub: bool = False
 
     def verify_metadata(self) -> None:
-        if diff := (self.default_metadata.keys() - self.metadata.keys()):
-            raise ValueError(f"Invalid metadata fields : {diff}")
+        if diff := (self.metadata.keys() - self.default_metadata.keys()):
+            raise MetadataError(f"Invalid metadata fields : {diff}")
 
     def set_start_hub(self) -> None:
         if self.end_hub:

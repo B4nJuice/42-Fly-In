@@ -1,6 +1,8 @@
 from ..network.network_object import NetworkObject
 from ..network.zone.zone import Zone
+from ..network.connection.connection import Connection
 from ..network.metadata.zone_metadata import ZoneMetadata
+from ..network.metadata.connection_metadata import ConnectionMetadata
 from ..network.coords import Coords
 from ..network.network import Network
 
@@ -20,7 +22,7 @@ class Parser:
     def erase_comment(line: str):
         return line.split("#")[0].strip()
 
-    def clean_lines(self) -> None:
+    def clean_lines(self) -> list[str]:
         lines: list[str] = []
         clean_lines: list[str] = []
 
@@ -46,16 +48,16 @@ class Parser:
 
     def get_object(self, splitted_line: tuple[str, str]) -> NetworkObject:
         key, value = splitted_line
+        key = key.strip()
         network_object: NetworkObject | None = None
-        datas: list[str] = value.strip().split(maxsplit=3)
-
-        print(datas)
+        datas: list[str] = value.strip()
 
         match key:
             case "nb_drones":
                 self.network.set_nb_drones(int(value))
 
-            case "hub":
+            case "hub" | "start_hub" | "end_hub":
+                datas = datas.split(maxsplit=3)
                 name: str = ""
                 coords: Coords = Coords()
                 metadata: ZoneMetadata | None = None
@@ -79,6 +81,36 @@ class Parser:
 
                 network_object = Zone(name, coords, metadata)
 
+                if key == "start_hub":
+                    self.network.set_start_hub(network_object)
+                elif key == "end_hub":
+                    self.network.set_end_hub(network_object)
+
+            case "connection":
+                datas = datas.split(maxsplit=1)
+                raw_connection: str = ""
+                metadata: ZoneMetadata | None = None
+
+                match len(datas):
+                    case 1:
+                        raw_connection = datas[0]
+                        metadata = ConnectionMetadata("[]")
+
+                    case 2:
+                        raw_connection = datas[0]
+                        metadata = ConnectionMetadata(datas[1])
+
+                    case _:
+                        raise FormatError(
+                                "incorrect format, "
+                                "format = <zone1-zone2> [metadata]."
+                            )
+
+                network_object = Connection(raw_connection, metadata)
+
+            case _:
+                raise FormatError(f"Unreconized key: {key}.")
+
         return network_object
 
     def parse_map(self) -> Network:
@@ -93,3 +125,8 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("./map.txt")
     parser.parse_map()
+    # print(parser.network.nb_drones)
+    print(list(map(lambda x: x.metadata.verify_metadata(), parser.network.zones)))
+    print("\n".join(list(map(lambda x: f"{x.name} {x.metadata.metadata}", parser.network.zones))))
+    print()
+    print("\n".join(list(map(lambda x: f"{x.raw_connection} {x.metadata.metadata}", parser.network.connections))))

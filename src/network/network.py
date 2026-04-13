@@ -1,4 +1,5 @@
 from .zone.zone import Zone
+from .connection.connection import Connection
 from .network_object import NetworkObject
 from functools import singledispatchmethod
 
@@ -9,6 +10,7 @@ class Network:
         self.start_hub: Zone = None
         self.end_hub: Zone = None
         self.zones: list[Zone] = []
+        self.connections: list[Connection] = []
 
     def set_nb_drones(self, nb_drones: int) -> None:
         if self.nb_drones is None:
@@ -36,5 +38,12 @@ class Network:
     def _(self, network_object: Zone) -> None:
         self.add_zone(network_object)
 
+    @add_object.register
+    def _(self, network_object: Connection) -> None:
+        self.add_connection(network_object)
+
     def add_zone(self, zone: Zone) -> None:
         self.zones.append(zone)
+
+    def add_connection(self, connection: Connection) -> None:
+        self.connections.append(connection)
