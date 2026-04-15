@@ -12,3 +12,8 @@ class Zone(NetworkObject):
             ):
         self.name: str = name
         self.metadata: ZoneMetadata = metadata
+        self.connections: list[NetworkObject] = []
+        self.coords: Coords = coords
+
+    def add_connection(self, connection: NetworkObject) -> None:
+        self.connections.append(connection)

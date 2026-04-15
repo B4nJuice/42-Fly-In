@@ -130,3 +130,4 @@ if __name__ == "__main__":
     print("\n".join(list(map(lambda x: f"{x.name} {x.metadata.metadata}", parser.network.zones))))
     print()
     print("\n".join(list(map(lambda x: f"{x.raw_connection} {x.metadata.metadata}", parser.network.connections))))
+    parser.network.verify()

@@ -43,7 +43,62 @@ class Network:
         self.add_connection(network_object)
 
     def add_zone(self, zone: Zone) -> None:
-        self.zones.append(zone)
+        if not self.get_zone_by_name(zone.name):
+            self.zones.append(zone)
+        else:
+            raise ValueError(f"multiple declaration for zone {zone.name}")
 
     def add_connection(self, connection: Connection) -> None:
         self.connections.append(connection)
+
+    def get_zone_by_name(self, name: str) -> Zone | None:
+        for zone in self.zones:
+            if zone.name == name:
+                return zone
+
+        return None
+
+    def process_connections(self) -> None:
+        from ..parser.parser import FormatError
+        for connection in self.connections:
+            try:
+                zone1_name, zone2_name = connection.raw_connection.split(
+                        "-", maxsplit=1
+                    )
+            except Exception:
+                raise FormatError("incorrect format, "
+                                  "format = <zone1-zone2> [metadata].")
+            zone1, zone2 = (
+                        self.get_zone_by_name(zone1_name),
+                        self.get_zone_by_name(zone2_name)
+                    )
+
+            if not all([zone1, zone2]):
+                raise ValueError(
+                        f"unknown zone names {connection.raw_connection}"
+                    )
+
+            if zone1_name == zone2_name:
+                raise ValueError(
+                    f"invalid connection '{connection.raw_connection}':"
+                    " duplicate zone."
+                    )
+
+            zone1.add_connection(connection)
+            zone2.add_connection(connection)
+
+            connection.set_zones(zone1, zone2)
+
+    def verify_zones(self) -> None:
+        coords_dict: dict[str, list[Zone]] = {}
+        for zone in self.zones:
+            coords_dict.setdefault(zone.coords.raw, []).append(zone)
+
+        for c, z in coords_dict.items():
+            print(c, " ".join(zo.name for zo in z))
+            if len(z) > 1:
+                raise ValueError(f"multiple zone on same coords {c}")
+
+    def verify(self) -> None:
+        self.process_connections()
+        self.verify_zones()
