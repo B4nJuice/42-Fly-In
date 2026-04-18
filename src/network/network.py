@@ -13,6 +13,8 @@ class Network:
         self.connections: list[Connection] = []
 
     def set_nb_drones(self, nb_drones: int) -> None:
+        if nb_drones <= 0:
+            raise ValueError("nb_drones has to be a positive integer.")
         if self.nb_drones is None:
             self.nb_drones = nb_drones
         else:
@@ -91,14 +93,30 @@ class Network:
 
     def verify_zones(self) -> None:
         coords_dict: dict[str, list[Zone]] = {}
+
         for zone in self.zones:
+            zone.metadata.verify_metadata()
             coords_dict.setdefault(zone.coords.raw, []).append(zone)
 
         for c, z in coords_dict.items():
-            print(c, " ".join(zo.name for zo in z))
             if len(z) > 1:
                 raise ValueError(f"multiple zone on same coords {c}")
+
+    def verify_connections(self) -> None:
+        connections_dict: dict[str, list[Connection]] = {}
+
+        for c in self.connections:
+            c.metadata.verify_metadata()
+            name_list: list[str] = [c.zone1.name, c.zone2.name]
+            name_list.sort()
+            sorted_raw_zones: str = "-".join(name_list)
+            connections_dict.setdefault(sorted_raw_zones, []).append(c)
+
+        for s, c in connections_dict.items():
+            if len(c) > 1:
+                raise ValueError(f"multiple connection for same zones '{s}'")
 
     def verify(self) -> None:
         self.process_connections()
         self.verify_zones()
+        self.verify_connections()
