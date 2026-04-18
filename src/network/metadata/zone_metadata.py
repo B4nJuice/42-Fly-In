@@ -2,6 +2,7 @@ from typing import Any
 from .utils import MetadataUtils, MetadataError
 from .metadata_interface import MetadataInterface
 from enum import Enum
+from src.ui.logger import Logger
 
 
 class ZoneType(Enum):
@@ -30,7 +31,7 @@ class ZoneMetadata(MetadataInterface):
 
         self.types: dict[str, callable] = {
             "zone": ZoneType,
-            "color": Color,
+            "color": self.get_color,
             "max_drones": int,
         }
 
@@ -46,6 +47,16 @@ class ZoneMetadata(MetadataInterface):
 
         self.start_hub: bool = False
         self.end_hub: bool = False
+
+    @staticmethod
+    def get_color(color: str) -> Color:
+        try:
+            return Color(color)
+        except Exception:
+            Logger.log_warning(
+                    f"'{color}' color is undefined, switched to default color."
+                )
+            return Color.NONE
 
     def verify_metadata(self) -> None:
         if diff := (self.metadata.keys() - self.default_metadata.keys()):

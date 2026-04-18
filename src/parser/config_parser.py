@@ -45,6 +45,7 @@ class Config():
         self.__config: dict[str, Any] = {}
         self.__config = {}
         self.__commentary_str: str = "#"
+        self.__lines: list[str] = []
 
     def set_commentary_str(self, commentary_str: str) -> None:
         """Set the prefix used to identify comment lines in the config file.
@@ -142,6 +143,9 @@ class Config():
         """
         return self.__config
 
+    def get_lines(self) -> list[str]:
+        return self.__lines
+
     def parse_file(self, file: TextIO) -> None:
         """Parse a configuration file and update parameter values.
 
@@ -165,11 +169,11 @@ class Config():
         -------
         None
         """
+        self.clean_lines(file)
+
         config = self.get_config()
         parameters = config.keys()
-        for line in self.get_next_line(file):
-            if line == "\n" or line.startswith(self.get_commentary_str()):
-                continue
+        for line in self.get_next_line(self.__lines):
             parameter, value = self.get_unprocessed_value(line)
             if parameter in parameters:
                 new_value = self.apply_types(parameter, config[parameter],
@@ -324,25 +328,57 @@ class Config():
 
         return value
 
-    @staticmethod
-    def get_next_line(file: TextIO) -> Iterator[str]:
-        """Yield lines from a file one by one.
+    def erase_comment(self, line: str) -> str:
+        """Remove the comment part of a line and trim surrounding spaces.
+
+        Parameters
+        ----------
+        line : str
+            Raw input line.
+
+        Returns
+        -------
+        str
+            Line content without its comment suffix.
+        """
+        return line.split(self.get_commentary_str(), maxsplit=1)[0].strip()
+
+    def clean_lines(self, file: TextIO) -> list[str]:
+        """Return non-empty lines after comment removal.
 
         Parameters
         ----------
         file : TextIOWrapper
             The file object to read.
 
+        Returns
+        -------
+        list[str]
+            A list of cleaned, non-empty lines.
+        """
+        raw_lines = file.readlines()
+        self.__lines = [
+            clean_line
+            for line in raw_lines
+            if (clean_line := self.erase_comment(line))
+        ]
+        return self.__lines
+
+    @staticmethod
+    def get_next_line(lines: list[str]) -> Iterator[str]:
+        """Yield lines from a cleaned lines list one by one.
+
+        Parameters
+        ----------
+        lines : list[str]
+            The cleaned lines to iterate over.
+
         Yields
         ------
         str
-            The next line in the file.
+            The next line in the cleaned lines list.
         """
-        line: str = ""
-        while True:
-            line = file.readline()
-            if not line:
-                break
+        for line in lines:
             yield line
 
     @staticmethod

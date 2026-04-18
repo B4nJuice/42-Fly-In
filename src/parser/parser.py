@@ -107,6 +107,9 @@ class Parser:
         with open(self.file_path, "r") as opened_file:
             config.parse_file(opened_file)
 
+        if not config.get_lines()[0].startswith("nb_drones"):
+            raise ConfigError("map has to start with 'nb_drones'.")
+
         for nb_drones in self.to_list(config.get_value("nb_drones")):
             self.network.set_nb_drones(nb_drones)
 
