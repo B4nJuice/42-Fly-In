@@ -1,19 +1,36 @@
 from typing import Any
 from .utils import MetadataUtils, MetadataError
 from .metadata_interface import MetadataInterface
+from enum import Enum
+
+
+class ZoneType(Enum):
+    NORMAL = "normal"
+    RESTRICTED = "restricted"
+    PRIORITY = "priority"
+    BLOCKED = "blocked"
+
+
+class Color(Enum):
+    NONE = None
+    BLUE = "blue"
+    RED = "red"
+    GREEN = "green"
+    YELLOW = "yellow"
+    GRAY = "gray"
 
 
 class ZoneMetadata(MetadataInterface):
     def __init__(self, metadata: str) -> None:
         self.default_metadata: dict[str, Any] = {
-            "zone": "normal",
-            "color": None,
+            "zone": ZoneType.NORMAL,
+            "color": Color.NONE,
             "max_drones": 1,
         }
 
         self.types: dict[str, callable] = {
-            "zone": str,
-            "color": str,
+            "zone": ZoneType,
+            "color": Color,
             "max_drones": int,
         }
 
@@ -33,6 +50,11 @@ class ZoneMetadata(MetadataInterface):
     def verify_metadata(self) -> None:
         if diff := (self.metadata.keys() - self.default_metadata.keys()):
             raise MetadataError(f"Invalid metadata fields : {diff}")
+
+        if self.metadata.get("max_drones") <= 0:
+            raise MetadataError(
+                    "max_drones field has to be a positive integer."
+                )
 
     def set_start_hub(self) -> None:
         if self.end_hub:

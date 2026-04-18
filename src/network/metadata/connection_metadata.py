@@ -26,3 +26,8 @@ class ConnectionMetadata(MetadataInterface):
     def verify_metadata(self) -> None:
         if diff := (self.metadata.keys() - self.default_metadata.keys()):
             raise MetadataError(f"Invalid metadata fields : {diff}")
+
+        if self.metadata.get("max_link_capacity") <= 0:
+            raise MetadataError(
+                    "max_link_capacity field has to be a positive integer."
+                )
