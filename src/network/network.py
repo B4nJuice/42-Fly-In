@@ -92,15 +92,7 @@ class Network:
             connection.set_zones(zone1, zone2)
 
     def verify_zones(self) -> None:
-        coords_dict: dict[str, list[Zone]] = {}
-
-        for zone in self.zones:
-            zone.metadata.verify_metadata()
-            coords_dict.setdefault(zone.coords.raw, []).append(zone)
-
-        for c, z in coords_dict.items():
-            if len(z) > 1:
-                raise ValueError(f"multiple zone on same coords {c}")
+        ...
 
     def verify_connections(self) -> None:
         connections_dict: dict[str, list[Connection]] = {}
