@@ -108,6 +108,14 @@ class Visualizer:
                 step_y
             )
             pyray.draw_circle(center_x, center_y, radius, color)
+            if zones[0].drones > 0:
+                marker_radius = max(1, int(radius * 0.35))
+                pyray.draw_circle(
+                    center_x,
+                    center_y,
+                    marker_radius,
+                    pyray.RAYWHITE
+                )
             return
 
         small_radius = max(1, int(radius * 0.45))
@@ -116,6 +124,10 @@ class Visualizer:
             x, y = self._get_zone_draw_position(tile, zone, step_x, step_y)
             color = self._zone_color_to_pyray(zone.metadata.metadata["color"])
             pyray.draw_circle(x, y, small_radius, color)
+            print(zone.drones)
+            if zone.drones > 0:
+                marker_radius = max(1, int(small_radius * 0.5))
+                pyray.draw_circle(x, y, marker_radius, pyray.RAYWHITE)
 
     def draw_map(self) -> None:
         if not self.map.map:
