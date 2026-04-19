@@ -2,8 +2,10 @@ from ..network.network import Network
 from ..network.zone.zone import Zone
 from ..network.metadata.zone_metadata import Color
 from .map import Map
+from .tile import Tile
 
 import pyray
+import math
 from queue import Queue
 from typing import Any
 
@@ -13,7 +15,7 @@ class Visualizer:
         self.network: Network = network
         self.action_queue: Queue = Queue()
         self.frame_action_queue: Queue = Queue()
-        self.background_color = pyray.RAYWHITE
+        self.background_color = pyray.BLACK
         self.tile_padding = 40
         self.create_map()
 
@@ -46,9 +48,74 @@ class Visualizer:
             zone.coords.x,
             zone.coords.y
         )
-        center_x = self.tile_padding + normalized_x * step_x + (step_x // 2)
-        center_y = self.tile_padding + normalized_y * step_y + (step_y // 2)
-        return center_x, center_y
+        tile = self.map.map[normalized_y][normalized_x]
+        return self._get_zone_draw_position(tile, zone, step_x, step_y)
+
+    @staticmethod
+    def _get_zones_from_tile(tile: Tile) -> list[Zone]:
+        return [obj for obj in tile.objects if isinstance(obj, Zone)]
+
+    def _get_zone_draw_position(
+                self,
+                tile: Tile,
+                zone: Zone,
+                step_x: int,
+                step_y: int
+            ) -> tuple[int, int]:
+        zones = self._get_zones_from_tile(tile)
+        center_x = self.tile_padding + tile.coords.x * step_x + (step_x // 2)
+        center_y = self.tile_padding + tile.coords.y * step_y + (step_y // 2)
+
+        if len(zones) <= 1:
+            return center_x, center_y
+
+        cols = max(1, math.ceil(math.sqrt(len(zones))))
+        rows = math.ceil(len(zones) / cols)
+        spacing_x = max(1, step_x // (cols + 1))
+        spacing_y = max(1, step_y // (rows + 1))
+
+        start_x = center_x - ((cols - 1) * spacing_x // 2)
+        start_y = center_y - ((rows - 1) * spacing_y // 2)
+
+        try:
+            index = zones.index(zone)
+        except ValueError:
+            return center_x, center_y
+
+        col = index % cols
+        row = index // cols
+        return start_x + col * spacing_x, start_y + row * spacing_y
+
+    def refresh_tile(
+                self,
+                tile: Tile,
+                step_x: int,
+                step_y: int,
+                radius: int
+            ) -> None:
+        zones = self._get_zones_from_tile(tile)
+        if not zones:
+            return
+
+        if len(zones) == 1:
+            color = self._zone_color_to_pyray(
+                zones[0].metadata.metadata["color"]
+            )
+            center_x, center_y = self._get_zone_draw_position(
+                tile,
+                zones[0],
+                step_x,
+                step_y
+            )
+            pyray.draw_circle(center_x, center_y, radius, color)
+            return
+
+        small_radius = max(1, int(radius * 0.45))
+
+        for zone in zones:
+            x, y = self._get_zone_draw_position(tile, zone, step_x, step_y)
+            color = self._zone_color_to_pyray(zone.metadata.metadata["color"])
+            pyray.draw_circle(x, y, small_radius, color)
 
     def draw_map(self) -> None:
         if not self.map.map:
@@ -74,21 +141,7 @@ class Visualizer:
 
         for row in self.map.map:
             for tile in row:
-                zone = self._get_zone_from_tile(tile)
-                if zone is None:
-                    continue
-
-                center_x = self.tile_padding + tile.coords.x * step_x + (
-                    step_x // 2
-                )
-                center_y = self.tile_padding + tile.coords.y * step_y + (
-                    step_y // 2
-                )
-                color = self._zone_color_to_pyray(
-                    zone.metadata.metadata["color"]
-                )
-
-                pyray.draw_circle(center_x, center_y, radius, color)
+                self.refresh_tile(tile, step_x, step_y, radius)
 
     def create_map(self) -> None:
         if not self.network.zones:
