@@ -128,10 +128,3 @@ class Parser:
             self.network.add_object(connection)
 
         return self.network
-
-
-if __name__ == "__main__":
-    parser = Parser("./map.txt")
-    parser.parse_map()
-    parser.network.verify()
-    print("OK")
