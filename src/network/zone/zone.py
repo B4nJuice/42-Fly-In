@@ -10,7 +10,12 @@ class Zone(NetworkObject):
                 name: str,
                 coords: Coords,
                 metadata: ZoneMetadata
-            ):
+            ) -> None:
+
+        from src.parser.parser import FormatError
+        if name.count("-"):
+            raise FormatError(f"{name} contain dash ('-').")
+
         self.name: str = name
         self.metadata: ZoneMetadata = metadata
         self.coords: Coords = coords

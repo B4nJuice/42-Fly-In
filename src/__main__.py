@@ -1,6 +1,7 @@
 from .parser.parser import Parser
 from .visualizer.visualizer import Visualizer
 from .algo.time_graph.time_graph import TimeGraph
+from .algo.solver.bfs.bfs import BFS
 
 
 if __name__ == "__main__":
@@ -13,5 +14,7 @@ if __name__ == "__main__":
 
     for _ in range(60):
         time_graph.next_step()
+
+    bfs = BFS(time_graph)
 
     print("OK")

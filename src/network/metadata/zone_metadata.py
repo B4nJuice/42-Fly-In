@@ -55,6 +55,9 @@ class ZoneMetadata(MetadataInterface):
         self.metadata.update(self.default_metadata)
         self.metadata.update(converted_metadata)
 
+        if self.metadata.get("zone") == ZoneType.BLOCKED:
+            self.metadata.update({"max_drones": 0})
+
         self.start_hub: bool = False
         self.end_hub: bool = False
 

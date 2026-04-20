@@ -50,23 +50,13 @@ class TimeGraph:
                 print(node.time, node.real_node.name)
                 continue
 
-            if not isinstance(node, ConnectionNode):
-                next_same_node: Node = self.create_node(
-                        self.step + 1, node.real_node
-                    )
-
-                self.step_dict.setdefault(self.step + 1, set()).add(
-                    next_same_node
-                )
-
-                node.add_connection(next_same_node)
             for zone, connection in node.real_node.get_connections():
 
                 step_to_add: int = 1
 
                 time: int = self.step + step_to_add
 
-                # TODO time + 1
+                # TODO time + 1 ?
 
                 next_node: Node = self.create_node(time, zone)
                 if zone.metadata.metadata.get("zone") == ZoneType.RESTRICTED:
@@ -76,9 +66,9 @@ class TimeGraph:
                         ConnectionNode
                     )
 
-                node.add_connection(next_node)
+                node.add_connection(next_node, connection)
                 self.step_dict.setdefault(time, set()).add(next_node)
 
-            print(node.time, node.real_node.name)
+            # print(node.time, node.real_node.name)
         print("\n------------------------\n")
         self.step += 1
