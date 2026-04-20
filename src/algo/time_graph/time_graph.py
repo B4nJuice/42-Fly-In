@@ -47,7 +47,7 @@ class TimeGraph:
                 self.step_dict.setdefault(self.step + 1, set()).add(
                     destination_node
                 )
-                print(node.time, node.real_node.name)
+                # print(node.time, node.real_node.name)
                 continue
 
             for zone, connection in node.real_node.get_connections():
@@ -70,5 +70,5 @@ class TimeGraph:
                 self.step_dict.setdefault(time, set()).add(next_node)
 
             # print(node.time, node.real_node.name)
-        print("\n------------------------\n")
+        # print("\n------------------------\n")
         self.step += 1
