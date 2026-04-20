@@ -28,6 +28,16 @@ class Visualizer:
             Color.GREEN: pyray.GREEN,
             Color.YELLOW: pyray.YELLOW,
             Color.GRAY: pyray.GRAY,
+            Color.PURPLE: pyray.PURPLE,
+            Color.BLACK: pyray.GRAY,
+            Color.BROWN: pyray.BROWN,
+            Color.ORANGE: pyray.ORANGE,
+            Color.MAROON: pyray.MAROON,
+            Color.GOLD: pyray.GOLD,
+            Color.DARKRED: pyray.MAROON,
+            Color.VIOLET: pyray.VIOLET,
+            Color.CRIMSON: pyray.MAGENTA,
+            Color.RAINBOW: pyray.RAYWHITE,
         }
         return color_map.get(zone_color, pyray.BLUE)
 
@@ -124,7 +134,6 @@ class Visualizer:
             x, y = self._get_zone_draw_position(tile, zone, step_x, step_y)
             color = self._zone_color_to_pyray(zone.metadata.metadata["color"])
             pyray.draw_circle(x, y, small_radius, color)
-            print(zone.drones)
             if zone.drones > 0:
                 marker_radius = max(1, int(small_radius * 0.5))
                 pyray.draw_circle(x, y, marker_radius, pyray.RAYWHITE)
