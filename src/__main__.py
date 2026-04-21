@@ -17,4 +17,7 @@ if __name__ == "__main__":
 
     bfs = BFS(time_graph)
 
+    while not bfs.end_reached:
+        bfs.next_level()
+
     print("OK")

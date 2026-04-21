@@ -1,6 +1,7 @@
 from src.algo.time_graph.time_graph import TimeGraph
 from src.algo.time_graph.node import Node
 from src.network.connection.connection import Connection
+from functools import lru_cache
 from .bfs_node import BFSNode
 from .bfs_edge import BFSEdge
 
@@ -14,10 +15,32 @@ class BFS:
             )
 
         self.search_edges(self.start_node)
+        self.bfs_level: dict[int, set[BFSNode]] = {0: set([self.start_node])}
+        self.actual_level: int = 0
+
+        self.end_reached: bool = False
+
+    def next_level(self) -> None:
+        for node in list(self.bfs_level.get(self.actual_level, [])):
+            if not self.end_reached:
+                if node.node.real_node.metadata.end_hub:
+                    self.end_reached = True
+            # print(self.actual_level,node.node.real_node.name, node.node.time)
+            for n in node.get_connected_nodes():
+                self.bfs_level.setdefault(self.actual_level + 1, set()).add(n)
+
+        # print("\n--------------------\n")
+
+        self.actual_level += 1
+
+        for node in self.bfs_level.get(self.actual_level, []):
+            self.search_edges(node)
 
     def search_edges(self, node: BFSNode) -> None:
         for node2, connection in node.node.connections:
-            new_node: BFSNode = self.create_bfs_node(node.node, node.level + 1)
+            if node2.time <= node.node.time:
+                continue
+            new_node: BFSNode = self.create_bfs_node(node2, node.level + 1)
 
             if new_node:
                 edge: BFSEdge = self.create_bfs_edge(
@@ -29,6 +52,7 @@ class BFS:
                 if edge:
                     node.edges.append(edge)
 
+    @lru_cache(maxsize=None)
     def create_bfs_node(self, node: Node, level: int) -> BFSNode | None:
         capacity: int = node.real_node.metadata.metadata.get("max_drones")
 
