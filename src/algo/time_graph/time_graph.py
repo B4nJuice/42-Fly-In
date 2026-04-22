@@ -50,6 +50,12 @@ class TimeGraph:
                 # print(node.time, node.real_node.name)
                 continue
 
+            else:
+                wait_time: int = self.step + 1
+                wait_node: Node = self.create_node(wait_time, node.real_node)
+                node.add_connection(wait_node)
+                self.step_dict.setdefault(wait_time, set()).add(wait_node)
+
             for zone, connection in node.real_node.get_connections():
 
                 step_to_add: int = 1

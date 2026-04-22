@@ -49,6 +49,9 @@ class BFS:
             new_node: BFSNode = self.create_bfs_node(node2, node.level + 1)
 
             if new_node:
+                if any(edge.node2 == new_node for edge in node.edges):
+                    continue
+
                 edge: BFSEdge = self.create_bfs_edge(
                         node,
                         new_node,
@@ -57,6 +60,23 @@ class BFS:
 
                 if edge:
                     node.edges.append(edge)
+
+    def grow_with_time_step(self) -> None:
+        self.time_graph.next_step()
+
+        max_known_level: int = max(self.bfs_level.keys(), default=0)
+
+        for level in range(max_known_level + 1):
+            for node in self.bfs_level.get(level, set()):
+                self.search_edges(node)
+
+        if not self.bfs_level.get(self.actual_level, set()):
+            for level in range(self.actual_level - 1, -1, -1):
+                if self.bfs_level.get(level, set()):
+                    self.actual_level = level
+                    break
+
+        self.next_level()
 
     @lru_cache(maxsize=None)
     def create_bfs_node(self, node: Node, level: int) -> BFSNode | None:
