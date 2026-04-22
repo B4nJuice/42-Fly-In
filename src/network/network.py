@@ -23,14 +23,16 @@ class Network:
     def set_start_hub(self, start_hub: Zone) -> None:
         if self.start_hub is None:
             self.start_hub = start_hub
-            start_hub.metadata.start_hub = True
+            start_hub.metadata.set_start_hub()
+            start_hub.metadata.metadata.update({"max_drones": self.nb_drones})
         else:
             raise ValueError("start_hub can be declared only once.")
 
     def set_end_hub(self, end_hub: Zone) -> None:
         if self.end_hub is None:
             self.end_hub = end_hub
-            end_hub.metadata.end_hub = True
+            end_hub.metadata.set_end_hub()
+            end_hub.metadata.metadata.update({"max_drones": self.nb_drones})
         else:
             raise ValueError("end_hub can be declared only once.")
 

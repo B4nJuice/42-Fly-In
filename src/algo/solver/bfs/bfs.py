@@ -18,10 +18,16 @@ class BFS:
         self.bfs_level: dict[int, set[BFSNode]] = {0: set([self.start_node])}
         self.actual_level: int = 0
 
-        self.end_reached: bool = False
+        self.end_reached: bool = (
+                self.start_node.node.real_node.metadata.end_hub
+            )
 
     def next_level(self) -> None:
-        for node in list(self.bfs_level.get(self.actual_level, [])):
+        current_level_nodes = list(self.bfs_level.get(self.actual_level, []))
+        if not current_level_nodes:
+            return
+
+        for node in current_level_nodes:
             if not self.end_reached:
                 if node.node.real_node.metadata.end_hub:
                     self.end_reached = True

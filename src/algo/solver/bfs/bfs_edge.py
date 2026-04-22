@@ -7,3 +7,6 @@ class BFSEdge:
         self.node2: BFSNode = node2
         self.capacity: int = capacity
         self.passage: int = 0
+
+    def get_remaining_capacity(self) -> int:
+        return self.capacity - self.passage

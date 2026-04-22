@@ -88,4 +88,4 @@ class ZoneMetadata(MetadataInterface):
     def set_end_hub(self) -> None:
         if self.end_hub:
             raise MetadataError("a zone cannot be end_hub and end_hub")
-        self.start_hub = True
+        self.end_hub = True

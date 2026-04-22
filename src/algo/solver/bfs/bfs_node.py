@@ -13,3 +13,6 @@ class BFSNode:
 
     def get_connected_nodes(self) -> list['BFSNode']:
         return [edge.node2 for edge in self.edges]
+
+    def get_remaining_capacity(self) -> int:
+        return self.capacity - self.passage
