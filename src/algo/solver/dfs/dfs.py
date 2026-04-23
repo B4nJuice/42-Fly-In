@@ -25,7 +25,7 @@ class DFS:
 
         visited.add(starting_node)
 
-        for edge in starting_node.edges:
+        for edge in starting_node.sort_edges():
             if edge.get_remaining_capacity() > 0 and not (
                         edge in visited_edges
                     ):
@@ -70,13 +70,13 @@ class DFS:
                 self.bfs.grow_with_time_step()
                 continue
 
-            print([
-                o.node.real_node.name for o in path if isinstance(o, BFSNode)
-            ])
+            # print([
+            #     o.node.real_node.name for o in path if isinstance(o, BFSNode)
+            # ])
 
             flow: int = self.get_blocking_flow(path)
             max_flow += flow
-            print(flow)
+            # print(flow)
             self.add_passage(path, flow)
 
         return max_flow

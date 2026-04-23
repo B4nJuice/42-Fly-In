@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser.parse_map()
     parser.network.verify()
     visualizer = Visualizer(parser.network)
-    # visualizer.start_display()
+    visualizer.start_display()
     time_graph = TimeGraph(parser.network)
 
     bfs = BFS(time_graph)

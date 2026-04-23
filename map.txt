@@ -1,98 +1,425 @@
-# Hard Level 3: THE ULTIMATE CHALLENGE - All tricks combined
-nb_drones: 15
+# Huge benchmark map with many styles, strong flow, and lots of dead ends.
+# Designed to be much larger and more varied than the previous version.
 
-start_hub: start 0 0 [color=green max_drones=15]
+nb_drones: 260
 
-# Layer 1: Initial distribution nightmare
-hub: dist_gate1 1 0 [color=orange max_drones=1]
-hub: dist_gate2 1 1 [color=orange max_drones=1]
-hub: dist_gate3 1 -1 [color=orange max_drones=1]
+start_hub: s 0 0 [color=green max_drones=260]
 
-# Layer 2: Dead end maze with loops
-hub: maze_trap1 2 2 [color=red]
-hub: maze_trap2 3 2 [color=red]
-hub: maze_loop1 2 1 [zone=restricted color=purple]
-hub: maze_loop2 3 1 [zone=restricted color=purple]
-hub: maze_loop3 4 1 [zone=restricted color=purple]
-hub: maze_loop4 4 2 [zone=restricted color=purple]
-hub: maze_correct 2 0 [color=blue]
+# Main spine
+hub: s1 1 0 [color=blue max_drones=28]
+hub: s2 2 0 [zone=priority color=gold max_drones=34]
+hub: s3 3 0 [color=gray max_drones=30]
+hub: s4 4 0 [zone=restricted color=violet max_drones=12]
+hub: s5 5 0 [color=orange max_drones=26]
+hub: s6 6 0 [zone=priority color=rainbow max_drones=36]
+hub: s7 7 0 [color=brown max_drones=26]
+hub: s8 8 0 [color=crimson max_drones=24]
+hub: s9 9 0 [zone=restricted color=purple max_drones=10]
+hub: s10 10 0 [color=darkred max_drones=22]
+hub: s11 11 0 [color=gold max_drones=26]
+hub: s12 12 0 [zone=priority color=yellow max_drones=32]
+hub: s13 13 0 [color=gray max_drones=24]
+hub: s14 14 0 [color=blue max_drones=24]
+hub: s15 15 0 [zone=restricted color=violet max_drones=10]
+hub: s16 16 0 [color=orange max_drones=22]
+hub: s17 17 0 [zone=priority color=gold max_drones=30]
+hub: s18 18 0 [color=brown max_drones=24]
+hub: s19 19 0 [color=crimson max_drones=22]
+hub: s20 20 0 [zone=priority color=rainbow max_drones=30]
+hub: s21 21 0 [color=gray max_drones=22]
+hub: s22 22 0 [color=blue max_drones=22]
+hub: s23 23 0 [zone=restricted color=purple max_drones=10]
+hub: s24 24 0 [color=orange max_drones=22]
+hub: s25 25 0 [zone=priority color=gold max_drones=30]
+hub: s26 26 0 [color=darkred max_drones=22]
+hub: s27 27 0 [color=yellow max_drones=22]
+hub: s28 28 0 [zone=restricted color=violet max_drones=10]
+hub: s29 29 0 [color=green max_drones=20]
 
-# Layer 3: Capacity nightmare section
-hub: bottleneck1 3 0 [color=yellow max_drones=2]
-hub: bottleneck2 4 0 [color=yellow max_drones=1]
-hub: overflow1 3 -1 [zone=restricted color=orange max_drones=3]
-hub: overflow2 4 -1 [zone=restricted color=orange max_drones=3]
+# Upper main corridor
+hub: u1 2 5 [color=maroon max_drones=20]
+hub: u2 3 5 [zone=priority color=gold max_drones=26]
+hub: u3 4 5 [color=blue max_drones=20]
+hub: u4 5 5 [zone=restricted color=purple max_drones=8]
+hub: u5 6 5 [color=orange max_drones=20]
+hub: u6 7 5 [color=gray max_drones=20]
+hub: u7 8 5 [zone=priority color=rainbow max_drones=28]
+hub: u8 9 5 [color=brown max_drones=20]
+hub: u9 10 5 [color=crimson max_drones=20]
+hub: u10 11 5 [zone=restricted color=violet max_drones=8]
+hub: u11 12 5 [color=gold max_drones=22]
+hub: u12 13 5 [color=orange max_drones=20]
+hub: u13 14 5 [zone=priority color=yellow max_drones=26]
+hub: u14 15 5 [color=gray max_drones=20]
+hub: u15 16 5 [color=blue max_drones=20]
+hub: u16 17 5 [zone=restricted color=purple max_drones=8]
+hub: u17 18 5 [color=maroon max_drones=18]
+hub: u18 19 5 [color=crimson max_drones=18]
+hub: u19 20 5 [zone=priority color=gold max_drones=26]
+hub: u20 21 5 [color=gray max_drones=18]
+hub: u21 22 5 [color=blue max_drones=18]
+hub: u22 23 5 [zone=restricted color=violet max_drones=8]
+hub: u23 24 5 [color=orange max_drones=18]
+hub: u24 25 5 [zone=priority color=rainbow max_drones=26]
+hub: u25 26 5 [color=brown max_drones=18]
+hub: u26 27 5 [color=crimson max_drones=18]
 
-# Layer 4: Priority puzzle with traps
-hub: priority_hub 5 0 [zone=priority color=cyan max_drones=4]
-hub: priority_trap1 5 1 [zone=priority color=cyan]
-hub: priority_trap2 6 1 [zone=priority color=cyan]
-hub: priority_dead_end 7 1 [color=red]
-hub: priority_correct 6 0 [zone=priority color=cyan max_drones=3]
+# Lower main corridor
+hub: d1 2 -5 [color=crimson max_drones=20]
+hub: d2 3 -5 [zone=priority color=gold max_drones=26]
+hub: d3 4 -5 [color=gray max_drones=20]
+hub: d4 5 -5 [zone=restricted color=violet max_drones=8]
+hub: d5 6 -5 [color=blue max_drones=20]
+hub: d6 7 -5 [color=orange max_drones=20]
+hub: d7 8 -5 [zone=priority color=rainbow max_drones=28]
+hub: d8 9 -5 [color=brown max_drones=20]
+hub: d9 10 -5 [color=crimson max_drones=20]
+hub: d10 11 -5 [zone=restricted color=purple max_drones=8]
+hub: d11 12 -5 [color=gold max_drones=22]
+hub: d12 13 -5 [color=orange max_drones=20]
+hub: d13 14 -5 [zone=priority color=yellow max_drones=26]
+hub: d14 15 -5 [color=gray max_drones=20]
+hub: d15 16 -5 [color=blue max_drones=20]
+hub: d16 17 -5 [zone=restricted color=violet max_drones=8]
+hub: d17 18 -5 [color=maroon max_drones=18]
+hub: d18 19 -5 [color=crimson max_drones=18]
+hub: d19 20 -5 [zone=priority color=gold max_drones=26]
+hub: d20 21 -5 [color=gray max_drones=18]
+hub: d21 22 -5 [color=blue max_drones=18]
+hub: d22 23 -5 [zone=restricted color=purple max_drones=8]
+hub: d23 24 -5 [color=orange max_drones=18]
+hub: d24 25 -5 [zone=priority color=rainbow max_drones=26]
+hub: d25 26 -5 [color=brown max_drones=18]
+hub: d26 27 -5 [color=crimson max_drones=18]
 
-# Layer 5: Multi-path convergence hell
-hub: conv_restricted1 7 0 [zone=restricted color=brown max_drones=2]
-hub: conv_restricted2 8 0 [zone=restricted color=brown max_drones=2]
-hub: conv_normal1 7 -1 [color=blue max_drones=3]
-hub: conv_normal2 8 -1 [color=blue max_drones=3]
-hub: conv_priority1 7 1 [zone=priority color=lime max_drones=2]
-hub: conv_priority2 8 1 [zone=priority color=lime max_drones=2]
+# Middle network
+hub: m1 3 2 [color=orange max_drones=18]
+hub: m2 4 2 [zone=restricted color=purple max_drones=8]
+hub: m3 5 2 [color=gold max_drones=20]
+hub: m4 6 2 [zone=priority color=rainbow max_drones=26]
+hub: m5 7 2 [color=gray max_drones=18]
+hub: m6 8 2 [color=blue max_drones=18]
+hub: m7 9 2 [zone=restricted color=violet max_drones=8]
+hub: m8 10 2 [color=brown max_drones=18]
+hub: m9 11 2 [zone=priority color=gold max_drones=24]
+hub: m10 12 2 [color=orange max_drones=18]
+hub: m11 13 2 [color=crimson max_drones=18]
+hub: m12 14 2 [zone=restricted color=purple max_drones=8]
+hub: m13 15 2 [color=gray max_drones=18]
+hub: m14 16 2 [zone=priority color=yellow max_drones=24]
+hub: m15 17 2 [color=blue max_drones=18]
+hub: m16 18 2 [color=orange max_drones=18]
+hub: m17 19 2 [zone=restricted color=violet max_drones=8]
+hub: m18 20 2 [color=brown max_drones=18]
+hub: m19 21 2 [zone=priority color=gold max_drones=24]
+hub: m20 22 2 [color=gray max_drones=18]
+hub: m21 23 2 [color=blue max_drones=18]
+hub: m22 24 2 [zone=restricted color=purple max_drones=8]
 
-# Layer 6: Final gauntlet
-hub: final_merge 9 0 [color=magenta max_drones=8]
-hub: final_gate1 10 0 [color=orange max_drones=3]
-hub: final_gate2 11 0 [color=orange max_drones=2]
-hub: final_gate3 12 0 [color=orange max_drones=1]
+# Merge before goal
+hub: g1 30 0 [color=green max_drones=50]
+hub: g2 31 0 [zone=priority color=gold max_drones=60]
+end_hub: g 32 0 [color=green max_drones=260]
 
-end_hub: goal 13 0 [color=gold max_drones=15]
+# Dead ends: upper side
+hub: du1 4 8 [color=black max_drones=2]
+hub: du2 5 8 [zone=restricted color=purple max_drones=2]
+hub: du3 6 8 [color=black max_drones=2]
+hub: du4 7 8 [color=black max_drones=2]
+hub: du5 9 8 [zone=priority color=gold max_drones=3]
+hub: du6 10 8 [color=black max_drones=2]
+hub: du7 12 8 [color=black max_drones=2]
+hub: du8 13 8 [zone=restricted color=purple max_drones=2]
+hub: du9 15 8 [color=black max_drones=2]
+hub: du10 16 8 [color=black max_drones=2]
+hub: du11 18 8 [zone=priority color=gold max_drones=3]
+hub: du12 19 8 [color=black max_drones=2]
+hub: du13 21 8 [color=black max_drones=2]
+hub: du14 22 8 [zone=restricted color=purple max_drones=2]
+hub: du15 24 8 [color=black max_drones=2]
+hub: du16 25 8 [color=black max_drones=2]
 
-# Layer 1 connections
-connection: start-dist_gate1
-connection: start-dist_gate2
-connection: start-dist_gate3
+# Dead ends: lower side
+hub: dd1 4 -8 [color=black max_drones=2]
+hub: dd2 5 -8 [zone=restricted color=purple max_drones=2]
+hub: dd3 6 -8 [color=black max_drones=2]
+hub: dd4 7 -8 [color=black max_drones=2]
+hub: dd5 9 -8 [zone=priority color=gold max_drones=3]
+hub: dd6 10 -8 [color=black max_drones=2]
+hub: dd7 12 -8 [color=black max_drones=2]
+hub: dd8 13 -8 [zone=restricted color=purple max_drones=2]
+hub: dd9 15 -8 [color=black max_drones=2]
+hub: dd10 16 -8 [color=black max_drones=2]
+hub: dd11 18 -8 [zone=priority color=gold max_drones=3]
+hub: dd12 19 -8 [color=black max_drones=2]
+hub: dd13 21 -8 [color=black max_drones=2]
+hub: dd14 22 -8 [zone=restricted color=purple max_drones=2]
+hub: dd15 24 -8 [color=black max_drones=2]
+hub: dd16 25 -8 [color=black max_drones=2]
 
-# Layer 2 connections - maze with traps
-connection: dist_gate1-maze_correct
-connection: dist_gate2-maze_trap1
-connection: dist_gate3-maze_loop1
-connection: maze_trap1-maze_trap2
-connection: maze_loop1-maze_loop2
-connection: maze_loop2-maze_loop3
-connection: maze_loop3-maze_loop4
-connection: maze_loop4-maze_loop1
-connection: maze_loop2-maze_correct
+# Dead ends: tiny side branches near the spine
+hub: sd1 6 1 [color=black max_drones=2]
+hub: sd2 7 1 [zone=restricted color=purple max_drones=2]
+hub: sd3 8 1 [color=black max_drones=2]
+hub: sd4 11 -1 [color=black max_drones=2]
+hub: sd5 12 -1 [zone=priority color=gold max_drones=3]
+hub: sd6 13 -1 [color=black max_drones=2]
+hub: sd7 17 1 [color=black max_drones=2]
+hub: sd8 18 1 [zone=restricted color=purple max_drones=2]
+hub: sd9 19 1 [color=black max_drones=2]
+hub: sd10 23 -1 [color=black max_drones=2]
+hub: sd11 24 -1 [zone=priority color=gold max_drones=3]
+hub: sd12 25 -1 [color=black max_drones=2]
 
-# Layer 3 connections - capacity nightmare
-connection: maze_correct-bottleneck1
-connection: bottleneck1-bottleneck2
-connection: bottleneck1-overflow1
-connection: overflow1-overflow2
-connection: overflow2-bottleneck2
+# Main spine connections
+connection: s-s1 [max_link_capacity=20]
+connection: s1-s2 [max_link_capacity=22]
+connection: s2-s3 [max_link_capacity=24]
+connection: s3-s4 [max_link_capacity=18]
+connection: s4-s5 [max_link_capacity=18]
+connection: s5-s6 [max_link_capacity=22]
+connection: s6-s7 [max_link_capacity=24]
+connection: s7-s8 [max_link_capacity=22]
+connection: s8-s9 [max_link_capacity=18]
+connection: s9-s10 [max_link_capacity=18]
+connection: s10-s11 [max_link_capacity=20]
+connection: s11-s12 [max_link_capacity=22]
+connection: s12-s13 [max_link_capacity=24]
+connection: s13-s14 [max_link_capacity=20]
+connection: s14-s15 [max_link_capacity=18]
+connection: s15-s16 [max_link_capacity=18]
+connection: s16-s17 [max_link_capacity=20]
+connection: s17-s18 [max_link_capacity=22]
+connection: s18-s19 [max_link_capacity=22]
+connection: s19-s20 [max_link_capacity=24]
+connection: s20-s21 [max_link_capacity=22]
+connection: s21-s22 [max_link_capacity=20]
+connection: s22-s23 [max_link_capacity=18]
+connection: s23-s24 [max_link_capacity=18]
+connection: s24-s25 [max_link_capacity=22]
+connection: s25-s26 [max_link_capacity=20]
+connection: s26-s27 [max_link_capacity=20]
+connection: s27-s28 [max_link_capacity=18]
+connection: s28-s29 [max_link_capacity=18]
+connection: s29-g1 [max_link_capacity=24]
+connection: g1-g2 [max_link_capacity=30]
+connection: g2-g [max_link_capacity=34]
 
-# Layer 4 connections - priority puzzle
-connection: bottleneck2-priority_hub
-connection: priority_hub-priority_trap1
-connection: priority_hub-priority_correct
-connection: priority_trap1-priority_trap2
-connection: priority_trap2-priority_dead_end
-connection: priority_correct-conv_restricted1
-connection: priority_correct-conv_normal1
-connection: priority_correct-conv_priority1
+# Upper corridor connections
+connection: s1-u1 [max_link_capacity=14]
+connection: u1-u2 [max_link_capacity=14]
+connection: u2-u3 [max_link_capacity=16]
+connection: u3-u4 [max_link_capacity=12]
+connection: u4-u5 [max_link_capacity=12]
+connection: u5-u6 [max_link_capacity=14]
+connection: u6-u7 [max_link_capacity=14]
+connection: u7-u8 [max_link_capacity=16]
+connection: u8-u9 [max_link_capacity=14]
+connection: u9-u10 [max_link_capacity=12]
+connection: u10-u11 [max_link_capacity=12]
+connection: u11-u12 [max_link_capacity=14]
+connection: u12-u13 [max_link_capacity=14]
+connection: u13-u14 [max_link_capacity=16]
+connection: u14-u15 [max_link_capacity=14]
+connection: u15-u16 [max_link_capacity=12]
+connection: u16-u17 [max_link_capacity=12]
+connection: u17-u18 [max_link_capacity=14]
+connection: u18-u19 [max_link_capacity=14]
+connection: u19-u20 [max_link_capacity=16]
+connection: u20-u21 [max_link_capacity=14]
+connection: u21-u22 [max_link_capacity=12]
+connection: u22-u23 [max_link_capacity=12]
+connection: u23-u24 [max_link_capacity=14]
+connection: u24-u25 [max_link_capacity=16]
+connection: u25-u26 [max_link_capacity=14]
+connection: u26-g1 [max_link_capacity=16]
 
-# Layer 5 connections - multi-path convergence
-connection: conv_restricted1-conv_restricted2
-connection: conv_normal1-conv_normal2
-connection: conv_priority1-conv_priority2
-connection: conv_restricted2-final_merge
-connection: conv_normal2-final_merge
-connection: conv_priority2-final_merge
+# Lower corridor connections
+connection: s1-d1 [max_link_capacity=14]
+connection: d1-d2 [max_link_capacity=14]
+connection: d2-d3 [max_link_capacity=16]
+connection: d3-d4 [max_link_capacity=12]
+connection: d4-d5 [max_link_capacity=12]
+connection: d5-d6 [max_link_capacity=14]
+connection: d6-d7 [max_link_capacity=14]
+connection: d7-d8 [max_link_capacity=16]
+connection: d8-d9 [max_link_capacity=14]
+connection: d9-d10 [max_link_capacity=12]
+connection: d10-d11 [max_link_capacity=12]
+connection: d11-d12 [max_link_capacity=14]
+connection: d12-d13 [max_link_capacity=14]
+connection: d13-d14 [max_link_capacity=16]
+connection: d14-d15 [max_link_capacity=14]
+connection: d15-d16 [max_link_capacity=12]
+connection: d16-d17 [max_link_capacity=12]
+connection: d17-d18 [max_link_capacity=14]
+connection: d18-d19 [max_link_capacity=14]
+connection: d19-d20 [max_link_capacity=16]
+connection: d20-d21 [max_link_capacity=14]
+connection: d21-d22 [max_link_capacity=12]
+connection: d22-d23 [max_link_capacity=12]
+connection: d23-d24 [max_link_capacity=14]
+connection: d24-d25 [max_link_capacity=16]
+connection: d25-d26 [max_link_capacity=14]
+connection: d26-g1 [max_link_capacity=16]
 
-# Layer 6 connections - final gauntlet
-connection: final_merge-final_gate1
-connection: final_gate1-final_gate2
-connection: final_gate2-final_gate3
-connection: final_gate3-goal
+# Middle network connections
+connection: s2-m1 [max_link_capacity=12]
+connection: m1-m2 [max_link_capacity=10]
+connection: m2-m3 [max_link_capacity=10]
+connection: m3-m4 [max_link_capacity=14]
+connection: m4-m5 [max_link_capacity=14]
+connection: m5-m6 [max_link_capacity=12]
+connection: m6-m7 [max_link_capacity=12]
+connection: m7-m8 [max_link_capacity=10]
+connection: m8-m9 [max_link_capacity=10]
+connection: m9-m10 [max_link_capacity=14]
+connection: m10-m11 [max_link_capacity=12]
+connection: m11-m12 [max_link_capacity=12]
+connection: m12-m13 [max_link_capacity=10]
+connection: m13-m14 [max_link_capacity=10]
+connection: m14-m15 [max_link_capacity=12]
+connection: m15-m16 [max_link_capacity=12]
+connection: m16-m17 [max_link_capacity=10]
+connection: m17-m18 [max_link_capacity=10]
+connection: m18-m19 [max_link_capacity=12]
+connection: m19-m20 [max_link_capacity=12]
+connection: m20-m21 [max_link_capacity=10]
+connection: m21-m22 [max_link_capacity=10]
+connection: m22-g1 [max_link_capacity=12]
 
-# Emergency bypass (very expensive)
-connection: overflow2-conv_normal1
-connection: priority_hub-conv_priority1
+# Spine to middle links
+connection: s3-m1 [max_link_capacity=12]
+connection: s4-m2 [max_link_capacity=10]
+connection: s5-m3 [max_link_capacity=12]
+connection: s6-m4 [max_link_capacity=14]
+connection: s7-m5 [max_link_capacity=12]
+connection: s8-m6 [max_link_capacity=12]
+connection: s9-m7 [max_link_capacity=10]
+connection: s10-m8 [max_link_capacity=10]
+connection: s11-m9 [max_link_capacity=12]
+connection: s12-m10 [max_link_capacity=14]
+connection: s13-m11 [max_link_capacity=12]
+connection: s14-m12 [max_link_capacity=12]
+connection: s15-m13 [max_link_capacity=10]
+connection: s16-m14 [max_link_capacity=10]
+connection: s17-m15 [max_link_capacity=12]
+connection: s18-m16 [max_link_capacity=12]
+connection: s19-m17 [max_link_capacity=10]
+connection: s20-m18 [max_link_capacity=10]
+connection: s21-m19 [max_link_capacity=12]
+connection: s22-m20 [max_link_capacity=12]
+connection: s23-m21 [max_link_capacity=10]
+connection: s24-m22 [max_link_capacity=10]
+
+# Cross-links between corridors
+connection: u2-s3 [max_link_capacity=10]
+connection: u4-s5 [max_link_capacity=10]
+connection: u6-s7 [max_link_capacity=12]
+connection: u8-s9 [max_link_capacity=10]
+connection: u10-s11 [max_link_capacity=10]
+connection: u12-s13 [max_link_capacity=12]
+connection: u14-s15 [max_link_capacity=10]
+connection: u16-s17 [max_link_capacity=10]
+connection: u18-s19 [max_link_capacity=10]
+connection: u20-s21 [max_link_capacity=10]
+connection: u22-s23 [max_link_capacity=10]
+connection: u24-s25 [max_link_capacity=10]
+
+connection: d2-s3 [max_link_capacity=10]
+connection: d4-s5 [max_link_capacity=10]
+connection: d6-s7 [max_link_capacity=12]
+connection: d8-s9 [max_link_capacity=10]
+connection: d10-s11 [max_link_capacity=10]
+connection: d12-s13 [max_link_capacity=12]
+connection: d14-s15 [max_link_capacity=10]
+connection: d16-s17 [max_link_capacity=10]
+connection: d18-s19 [max_link_capacity=10]
+connection: d20-s21 [max_link_capacity=10]
+connection: d22-s23 [max_link_capacity=10]
+connection: d24-s25 [max_link_capacity=10]
+
+connection: m2-u3 [max_link_capacity=10]
+connection: m4-u5 [max_link_capacity=12]
+connection: m6-u7 [max_link_capacity=12]
+connection: m8-u9 [max_link_capacity=10]
+connection: m10-u11 [max_link_capacity=12]
+connection: m12-u13 [max_link_capacity=10]
+connection: m14-u15 [max_link_capacity=10]
+connection: m16-u17 [max_link_capacity=10]
+connection: m18-u19 [max_link_capacity=10]
+connection: m20-u21 [max_link_capacity=10]
+connection: m22-u23 [max_link_capacity=10]
+
+connection: m2-d3 [max_link_capacity=10]
+connection: m4-d5 [max_link_capacity=12]
+connection: m6-d7 [max_link_capacity=12]
+connection: m8-d9 [max_link_capacity=10]
+connection: m10-d11 [max_link_capacity=12]
+connection: m12-d13 [max_link_capacity=10]
+connection: m14-d15 [max_link_capacity=10]
+connection: m16-d17 [max_link_capacity=10]
+connection: m18-d19 [max_link_capacity=10]
+connection: m20-d21 [max_link_capacity=10]
+connection: m22-d23 [max_link_capacity=10]
+
+# Dead-end branches on upper side
+connection: u3-du1 [max_link_capacity=2]
+connection: du1-du2 [max_link_capacity=1]
+connection: du2-du3 [max_link_capacity=1]
+
+connection: u7-du4 [max_link_capacity=2]
+connection: du4-du5 [max_link_capacity=1]
+connection: du5-du6 [max_link_capacity=1]
+
+connection: u11-du7 [max_link_capacity=2]
+connection: du7-du8 [max_link_capacity=1]
+connection: du8-du9 [max_link_capacity=1]
+
+connection: u15-du10 [max_link_capacity=2]
+connection: du10-du11 [max_link_capacity=1]
+connection: du11-du12 [max_link_capacity=1]
+
+connection: u19-du13 [max_link_capacity=2]
+connection: du13-du14 [max_link_capacity=1]
+connection: du14-du15 [max_link_capacity=1]
+
+connection: u23-du16 [max_link_capacity=2]
+connection: du16-g1 [max_link_capacity=1]
+
+# Dead-end branches on lower side
+connection: d3-dd1 [max_link_capacity=2]
+connection: dd1-dd2 [max_link_capacity=1]
+connection: dd2-dd3 [max_link_capacity=1]
+
+connection: d7-dd4 [max_link_capacity=2]
+connection: dd4-dd5 [max_link_capacity=1]
+connection: dd5-dd6 [max_link_capacity=1]
+
+connection: d11-dd7 [max_link_capacity=2]
+connection: dd7-dd8 [max_link_capacity=1]
+connection: dd8-dd9 [max_link_capacity=1]
+
+connection: d15-dd10 [max_link_capacity=2]
+connection: dd10-dd11 [max_link_capacity=1]
+connection: dd11-dd12 [max_link_capacity=1]
+
+connection: d19-dd13 [max_link_capacity=2]
+connection: dd13-dd14 [max_link_capacity=1]
+connection: dd14-dd15 [max_link_capacity=1]
+
+connection: d23-dd16 [max_link_capacity=2]
+connection: dd16-g1 [max_link_capacity=1]
+
+# Tiny side dead ends
+connection: s6-sd1 [max_link_capacity=2]
+connection: sd1-sd2 [max_link_capacity=1]
+
+connection: s12-sd3 [max_link_capacity=2]
+connection: sd3-sd4 [max_link_capacity=1]
+
+connection: s18-sd5 [max_link_capacity=2]
+connection: sd5-sd6 [max_link_capacity=1]
+
+connection: s24-sd7 [max_link_capacity=2]
+connection: sd7-sd8 [max_link_capacity=1]
