@@ -9,8 +9,14 @@ if __name__ == "__main__":
     parser = Parser("./map.txt")
     parser.parse_map()
     parser.network.verify()
+
+    parser.network.create_all_drones()
+
+    print(parser.network.nb_drones)
+    print(len(parser.network.drones))
+
     visualizer = Visualizer(parser.network)
-    visualizer.start_display()
+    # visualizer.start_display()
     time_graph = TimeGraph(parser.network)
 
     bfs = BFS(time_graph)

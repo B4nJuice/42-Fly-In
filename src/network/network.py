@@ -1,6 +1,7 @@
 from .zone.zone import Zone
 from .connection.connection import Connection
 from .network_object import NetworkObject
+from .drone.drone import Drone
 from functools import singledispatchmethod
 
 
@@ -11,6 +12,16 @@ class Network:
         self.end_hub: Zone = None
         self.zones: list[Zone] = []
         self.connections: list[Connection] = []
+        self.drones: list[Drone] = []
+
+    def create_all_drones(self) -> None:
+        for _ in range(self.nb_drones):
+            self.create_drone()
+
+    def create_drone(self) -> None:
+        new_drone: Drone = Drone(f"D{len(self.drones)}")
+        self.drones.append(new_drone)
+        self.start_hub.drones.append(new_drone)
 
     def set_nb_drones(self, nb_drones: int) -> None:
         if nb_drones <= 0:
@@ -96,7 +107,8 @@ class Network:
             connection.set_zones(zone1, zone2)
 
     def verify_zones(self) -> None:
-        ...
+        for zone in self.zones:
+            zone.metadata.verify_metadata()
 
     def verify_connections(self) -> None:
         connections_dict: dict[str, list[Connection]] = {}

@@ -1,6 +1,7 @@
 from ..coords import Coords
 from ..metadata.zone_metadata import ZoneMetadata
 from ..network_object import NetworkObject
+from ..drone.drone import Drone
 from functools import lru_cache
 
 
@@ -21,7 +22,7 @@ class Zone(NetworkObject):
         self.coords: Coords = coords
         self.is_special: bool = False
         self.connections: list[NetworkObject] = []
-        self.drones: int = 0
+        self.drones: list[Drone] = []
 
     def add_connection(self, connection: NetworkObject) -> None:
         self.connections.append(connection)

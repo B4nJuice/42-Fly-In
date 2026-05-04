@@ -25,7 +25,12 @@ class MetadataUtils:
         metadata_dict: dict[str, str] = {}
 
         for data in datas:
-            key, value = data.split("=", maxsplit=1)
+            try:
+                key, value = data.split("=", maxsplit=1)
+            except Exception:
+                raise MetadataError(
+                        f"Missing value for key: {data.replace('=', '')}"
+                    )
             if key in metadata_dict.keys():
                 raise MetadataError(f"duplicate key in metadata: {key}.")
             metadata_dict.update({key: value})
