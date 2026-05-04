@@ -65,6 +65,39 @@ class Visualizer:
     def _get_zones_from_tile(tile: Tile) -> list[Zone]:
         return [obj for obj in tile.objects if isinstance(obj, Zone)]
 
+    @staticmethod
+    def _draw_centered_text(
+                text: str,
+                center_x: int,
+                center_y: int,
+                max_width: int,
+                max_height: int,
+                color: pyray.Color
+            ) -> None:
+        font_size = max(1, min(max_width, max_height))
+        while font_size > 1 and (
+                    pyray.measure_text(text, font_size) > max_width
+                    or font_size > max_height
+                ):
+            font_size -= 1
+
+        text_width = pyray.measure_text(text, font_size)
+        text_x = center_x - (text_width // 2)
+        text_y = center_y - (font_size // 2)
+        pyray.draw_text(text, text_x, text_y, font_size, color)
+
+    @staticmethod
+    def _is_point_in_circle(
+                point_x: int,
+                point_y: int,
+                center_x: int,
+                center_y: int,
+                radius: int
+            ) -> bool:
+        dx = point_x - center_x
+        dy = point_y - center_y
+        return (dx * dx) + (dy * dy) <= (radius * radius)
+
     def _get_zone_draw_position(
                 self,
                 tile: Tile,
@@ -101,7 +134,9 @@ class Visualizer:
                 tile: Tile,
                 step_x: int,
                 step_y: int,
-                radius: int
+                radius: int,
+                mouse_x: int,
+                mouse_y: int
             ) -> None:
         zones = self._get_zones_from_tile(tile)
         if not zones:
@@ -118,6 +153,7 @@ class Visualizer:
                 step_y
             )
             pyray.draw_circle(center_x, center_y, radius, color)
+            n_drones: int = len(zones[0].drones)
             if len(zones[0].drones) > 0:
                 marker_radius = max(1, int(radius * 0.35))
                 pyray.draw_circle(
@@ -125,6 +161,21 @@ class Visualizer:
                     center_y,
                     marker_radius,
                     pyray.RAYWHITE
+                )
+            if self._is_point_in_circle(
+                        mouse_x,
+                        mouse_y,
+                        center_x,
+                        center_y,
+                        radius
+                    ):
+                self._draw_centered_text(
+                    str(n_drones),
+                    center_x,
+                    center_y,
+                    max(2, int(radius * 1.4)),
+                    max(2, int(radius * 1.4)),
+                    pyray.BLACK
                 )
             return
 
@@ -134,9 +185,25 @@ class Visualizer:
             x, y = self._get_zone_draw_position(tile, zone, step_x, step_y)
             color = self._zone_color_to_pyray(zone.metadata.metadata["color"])
             pyray.draw_circle(x, y, small_radius, color)
-            if len(zone.drones) > 0:
+            n_drones: int = len(zone.drones)
+            if n_drones > 0:
                 marker_radius = max(1, int(small_radius * 0.5))
                 pyray.draw_circle(x, y, marker_radius, pyray.RAYWHITE)
+            if self._is_point_in_circle(
+                        mouse_x,
+                        mouse_y,
+                        x,
+                        y,
+                        small_radius
+                    ):
+                self._draw_centered_text(
+                    str(n_drones),
+                    x,
+                    y,
+                    max(2, int(small_radius * 1.4)),
+                    max(2, int(small_radius * 1.4)),
+                    pyray.BLACK
+                )
 
     def draw_map(self) -> None:
         if not self.map.map:
@@ -151,6 +218,9 @@ class Visualizer:
         step_x = max(1, usable_width // max(1, map_width))
         step_y = max(1, usable_height // max(1, map_height))
         radius = max(1, int(min(step_x, step_y) * 0.25))
+        mouse_position = pyray.get_mouse_position()
+        mouse_x = int(mouse_position.x)
+        mouse_y = int(mouse_position.y)
 
         for connection in self.network.connections:
             if connection.zone1 is None or connection.zone2 is None:
@@ -160,9 +230,36 @@ class Visualizer:
             x2, y2 = self._get_zone_center(connection.zone2, step_x, step_y)
             pyray.draw_line(x1, y1, x2, y2, pyray.DARKGRAY)
 
+            center_x = (x1 + x2) // 2
+            center_y = (y1 + y2) // 2
+            n_drones: int = len(connection.drones)
+            connection_marker_radius = max(1, int(radius * 0.55))
+            if n_drones > 0:
+                pyray.draw_circle(
+                    center_x,
+                    center_y,
+                    connection_marker_radius,
+                    pyray.RAYWHITE
+                )
+            if self._is_point_in_circle(
+                        mouse_x,
+                        mouse_y,
+                        center_x,
+                        center_y,
+                        connection_marker_radius
+                    ):
+                self._draw_centered_text(
+                    str(n_drones),
+                    center_x,
+                    center_y,
+                    max(2, int(connection_marker_radius * 1.8)),
+                    max(2, int(connection_marker_radius * 1.8)),
+                    pyray.BLACK
+                )
+
         for row in self.map.map:
             for tile in row:
-                self.refresh_tile(tile, step_x, step_y, radius)
+                self.refresh_tile(tile, step_x, step_y, radius, mouse_x, mouse_y)
 
     def create_map(self) -> None:
         if not self.network.zones:

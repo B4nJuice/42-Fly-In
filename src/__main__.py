@@ -16,7 +16,6 @@ if __name__ == "__main__":
     print(len(parser.network.drones))
 
     visualizer = Visualizer(parser.network)
-    # visualizer.start_display()
     time_graph = TimeGraph(parser.network)
 
     bfs = BFS(time_graph)
@@ -25,3 +24,4 @@ if __name__ == "__main__":
 
     print(dfs.get_all_paths())
     print(bfs.actual_level)
+    visualizer.start_display()
