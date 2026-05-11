@@ -3,9 +3,16 @@ from .visualizer.visualizer import Visualizer
 from .algo.time_graph.time_graph import TimeGraph
 from .algo.solver.bfs.bfs import BFS
 from .algo.solver.dfs.dfs import DFS
+from .map_chooser.ui import chooserUI
 
 
 if __name__ == "__main__":
+    chooser = chooserUI()
+
+    chooser.start_ui()
+
+    exit(0)
+
     parser = Parser("./map.txt")
     parser.parse_map()
     parser.network.verify()

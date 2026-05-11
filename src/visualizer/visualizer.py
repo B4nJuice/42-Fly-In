@@ -372,6 +372,4 @@ class Visualizer:
             for _ in range(self.frame_action_queue.qsize()):
                 self.call_action_from_queue(persistent=True)
 
-            print(self.step)
-
         pyray.close_window()
