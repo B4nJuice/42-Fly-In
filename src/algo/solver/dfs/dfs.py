@@ -1,6 +1,7 @@
 from ..bfs.bfs import BFS
 from ..bfs.bfs_node import BFSNode
 from ..bfs.bfs_edge import BFSEdge
+from src.algo.time_graph.connection_node import ConnectionNode
 from src.network.zone.zone import Zone
 from src.network.drone.drone import Drone
 from src.network.connection.connection import Connection
@@ -148,6 +149,11 @@ class DFS:
 
             for node in current_nodes:
                 real_node = node.node.real_node
+                if isinstance(node.node, ConnectionNode):
+                    if node.node.time > last_step:
+                        last_step = node.node.time
+                    continue
+
                 if isinstance(real_node, Zone):
                     self.add_zone_state(
                         zone_history,
@@ -169,7 +175,10 @@ class DFS:
                 if edge.real_connection is None:
                     continue
 
-                transition_step: int = edge.node1.node.time
+                if not isinstance(edge.node2.node, ConnectionNode):
+                    continue
+
+                transition_step: int = edge.node2.node.time
                 self.add_connection_state(
                     connection_history,
                     transition_step,
