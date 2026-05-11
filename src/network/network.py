@@ -13,15 +13,27 @@ class Network:
         self.zones: list[Zone] = []
         self.connections: list[Connection] = []
         self.drones: list[Drone] = []
+        self.max_frames: int = 0
+        self.zone_drones_by_step: dict[int, dict[Zone, list[Drone]]] = {}
+        self.connection_drones_by_step: dict[
+            int,
+            dict[Connection, list[Drone]]
+        ] = {}
 
     def create_all_drones(self) -> None:
         for _ in range(self.nb_drones):
             self.create_drone()
 
+        self.set_state_history(
+            {0: {self.start_hub: list(self.drones)}},
+            {0: {}}
+        )
+
     def create_drone(self) -> None:
         new_drone: Drone = Drone(f"D{len(self.drones)}")
         self.drones.append(new_drone)
         self.start_hub.drones.append(new_drone)
+        new_drone.zone_by_step[0] = self.start_hub
 
     def set_nb_drones(self, nb_drones: int) -> None:
         if nb_drones <= 0:
@@ -128,3 +140,61 @@ class Network:
         self.process_connections()
         self.verify_zones()
         self.verify_connections()
+
+    def clear_live_drones(self) -> None:
+        for zone in self.zones:
+            zone.drones = []
+
+        for connection in self.connections:
+            connection.drones = []
+
+    def set_state_history(
+                self,
+                zone_drones_by_step: dict[int, dict[Zone, list[Drone]]],
+                connection_drones_by_step: dict[
+                    int,
+                    dict[Connection, list[Drone]]
+                ]
+            ) -> None:
+        self.zone_drones_by_step = zone_drones_by_step
+        self.connection_drones_by_step = connection_drones_by_step
+
+        known_steps: set[int] = set(zone_drones_by_step.keys())
+        known_steps.update(connection_drones_by_step.keys())
+        self.max_frames = max(known_steps, default=0)
+
+        self.apply_state_at_step(0)
+
+    def apply_state_at_step(self, step: int) -> None:
+        self.clear_live_drones()
+
+        clamped_step = min(self.max_frames, max(0, step))
+
+        for zone, drones in self.zone_drones_by_step.get(clamped_step, {}).items():
+            zone.drones = list(drones)
+
+        for connection, drones in self.connection_drones_by_step.get(
+                    clamped_step,
+                    {}
+                ).items():
+            connection.drones = list(drones)
+
+    def get_state_at_step(self, step: int) -> dict[str, dict[str, list[str]]]:
+        clamped_step = min(self.max_frames, max(0, step))
+
+        zone_state: dict[str, list[str]] = {
+            zone.name: [drone.id for drone in drones]
+            for zone, drones in self.zone_drones_by_step.get(clamped_step, {}).items()
+        }
+        connection_state: dict[str, list[str]] = {
+            connection.raw_connection: [drone.id for drone in drones]
+            for connection, drones in self.connection_drones_by_step.get(
+                clamped_step,
+                {}
+            ).items()
+        }
+
+        return {
+            "zones": zone_state,
+            "connections": connection_state,
+        }

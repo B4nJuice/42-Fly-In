@@ -62,8 +62,6 @@ class TimeGraph:
 
                 time: int = self.step + step_to_add
 
-                # TODO time + 1 ?
-
                 next_node: Node = self.create_node(time, zone)
                 if zone.metadata.metadata.get("zone") == ZoneType.RESTRICTED:
                     next_node = self.create_node(

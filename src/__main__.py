@@ -25,3 +25,5 @@ if __name__ == "__main__":
     print(dfs.get_all_paths())
     print(bfs.actual_level)
     visualizer.start_display()
+
+    # TODO: Erase prints

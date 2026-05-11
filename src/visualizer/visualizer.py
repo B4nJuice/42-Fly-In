@@ -17,6 +17,7 @@ class Visualizer:
         self.frame_action_queue: Queue = Queue()
         self.background_color = pyray.BLACK
         self.tile_padding = 40
+        self.step: int = 0
         self.create_map()
 
     @staticmethod
@@ -206,6 +207,8 @@ class Visualizer:
                 )
 
     def draw_map(self) -> None:
+        self.network.apply_state_at_step(self.step)
+
         if not self.map.map:
             return
 
@@ -314,6 +317,17 @@ class Visualizer:
         while not self.action_queue.empty():
             self.call_action_from_queue()
 
+    def process_keys(self, key_pressed: int) -> None:
+        match key_pressed:
+            case pyray.KEY_LEFT:
+                self.update_step(-1)
+
+            case pyray.KEY_RIGHT:
+                self.update_step(1)
+
+    def update_step(self, add: int) -> None:
+        self.step = min(self.network.max_frames, max(0, self.step + add))
+
     def start_display(self) -> None:
         pyray.set_trace_log_level(pyray.LOG_NONE)
         pyray.init_window(1, 1, "Fly-In")
@@ -337,11 +351,27 @@ class Visualizer:
             self._execute_pending_actions,
             persistent=True
         )
+
+        infos_dict: dict[str, Any] = {"pressed_key": 0}
+
         self.add_action_to_queue(self.draw_map, persistent=True)
         self.add_action_to_queue(pyray.end_drawing, persistent=True)
+        self.add_action_to_queue(
+                lambda: infos_dict.update({"pressed_key": pyray.get_key_pressed()}),
+                persistent=True
+            )
+        self.add_action_to_queue(
+                lambda: self.process_keys(
+                    infos_dict.get("pressed_key")
+                ),
+                persistent=True                
+                )
+
 
         while not pyray.window_should_close():
             for _ in range(self.frame_action_queue.qsize()):
                 self.call_action_from_queue(persistent=True)
+
+            print(self.step)
 
         pyray.close_window()

@@ -105,4 +105,5 @@ class BFS:
         if capacity <= 0:
             return
 
-        return BFSEdge(node1, node2, capacity)
+        return BFSEdge(node1, node2, capacity, real_connection)
+
