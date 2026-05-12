@@ -9,11 +9,9 @@ from .map_chooser.ui import chooserUI
 if __name__ == "__main__":
     chooser = chooserUI()
 
-    chooser.start_ui()
+    map_path: str = chooser.start_ui()
 
-    exit(0)
-
-    parser = Parser("./map.txt")
+    parser = Parser(map_path)
     parser.parse_map()
     parser.network.verify()
 
