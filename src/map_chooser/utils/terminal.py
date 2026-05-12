@@ -1,4 +1,9 @@
 from enum import Enum
+import tty
+import sys
+import termios
+import fcntl
+import os
 
 
 class Colors(Enum):
@@ -60,3 +65,28 @@ class TerminalStyler():
         rendered_text += text
         rendered_text += Colors.RESET.value
         return rendered_text
+
+    @staticmethod
+    def get_key() -> str:
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+
+        try:
+            tty.setraw(fd)
+
+            char = sys.stdin.read(1)
+
+            if char == "\x1b":
+                fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
+
+                try:
+                    char += sys.stdin.read(2)
+                except:
+                    pass
+
+            return char
+
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            fcntl.fcntl(fd, fcntl.F_SETFL, old_flags)
