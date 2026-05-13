@@ -34,7 +34,6 @@ class BFS:
             for n in node.get_connected_nodes():
                 self.bfs_level.setdefault(self.actual_level + 1, set()).add(n)
 
-
         self.actual_level += 1
 
         for node in self.bfs_level.get(self.actual_level, []):
@@ -50,7 +49,7 @@ class BFS:
                 if any(edge.node2 == new_node for edge in node.edges):
                     continue
 
-                edge: BFSEdge = self.create_bfs_edge(
+                edge: BFSEdge | None = self.create_bfs_edge(
                         node,
                         new_node,
                         connection
@@ -104,4 +103,3 @@ class BFS:
             return
 
         return BFSEdge(node1, node2, capacity, real_connection)
-

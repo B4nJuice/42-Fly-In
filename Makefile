@@ -14,12 +14,12 @@ debug: install
 	@$(UV_RUN) -B -m pdb -m src $(ARGS)
 
 lint: install
-	$(MYPY) src --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 	$(FLAKE8) src
+	$(MYPY) src --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict: install
-	$(MYPY) src --strict
 	$(FLAKE8) src
+	$(MYPY) src --strict
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

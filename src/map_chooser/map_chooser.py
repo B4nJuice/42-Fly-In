@@ -8,10 +8,12 @@ class MapChooser:
 
             items: list[str] = sorted(os.listdir(base_path))
             dirs: list[str] = [
-                item for item in items if os.path.isdir(os.path.join(base_path, item))
+                item for item in items if os.path.isdir(os.path.join(
+                        base_path, item
+                    ))
             ]
             files: list[str] = [item for item in items if item not in dirs]
         except Exception:
-            return ([],[])
+            return ([], [])
 
         return (dirs, files)

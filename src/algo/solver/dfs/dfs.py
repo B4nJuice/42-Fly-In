@@ -180,7 +180,9 @@ class DFS:
                     edge.real_connection,
                     drone
                 )
-                drone.connection_by_step[transition_step] = edge.real_connection
+                drone.connection_by_step.update(
+                        {transition_step: edge.real_connection}
+                    )
 
                 if transition_step > last_step:
                     last_step = transition_step

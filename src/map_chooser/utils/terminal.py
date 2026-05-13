@@ -42,7 +42,7 @@ class TerminalStyler():
     @staticmethod
     def clear_x_lines(x: int):
         for i in range(x):
-            print(f"\x1b[1A", end="", flush=True)
+            print("\x1b[1A", end="", flush=True)
             TerminalStyler.clear_current_line()
 
     @staticmethod
@@ -82,7 +82,7 @@ class TerminalStyler():
 
                 try:
                     char += sys.stdin.read(2)
-                except:
+                except Exception:
                     pass
 
             return char

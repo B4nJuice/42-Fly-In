@@ -44,9 +44,9 @@ if __name__ == "__main__":
     try:
         parser = Parser(map_path)
         parser.parse_map()
-        
+
         network: Network = parser.network
-        
+
         network.verify()
         network.create_all_drones()
 
@@ -63,13 +63,16 @@ if __name__ == "__main__":
         for level in range(1, bfs.actual_level + 1):
             level_status: list[str] = []
             for drone in parser.network.drones:
-                last_position: NetworkObject = drone.zone_by_step.get(level - 1, drone.connection_by_step.get(level - 1))
-                position: NetworkObject = drone.zone_by_step.get(level, drone.connection_by_step.get(level))
+                last_position: NetworkObject = drone.zone_by_step.get(
+                        level - 1, drone.connection_by_step.get(level - 1)
+                    )
+                position: NetworkObject = drone.zone_by_step.get(
+                        level, drone.connection_by_step.get(level)
+                    )
 
                 if position != last_position:
                     level_status.append(f"{drone.id}-{position.name}")
             output_lines.append(" ".join(level_status))
-
 
         try:
             with open(output_file, "w", encoding="utf-8") as output_handle:

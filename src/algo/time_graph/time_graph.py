@@ -51,8 +51,11 @@ class TimeGraph:
                     self.get_real_nodes(current_nodes)
                     == self.get_real_nodes(previous_nodes)
                     == self.get_real_nodes(previous_previous_nodes)
-                ) and not [n for n in self.get_real_nodes(current_nodes) if n.metadata.end_hub]:
+                ) and not [n for n in self.get_real_nodes(
+                        current_nodes
+                    ) if n.metadata.end_hub]:
                 raise ConfigError("end_hub is not reachable.")
+
         for node in current_nodes:
             if isinstance(node, ConnectionNode):
                 destination_node: Node = self.create_node(

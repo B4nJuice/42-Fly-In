@@ -278,12 +278,24 @@ class Visualizer:
 
         for row in self.map.map:
             for tile in row:
-                self.refresh_tile(tile, step_x, step_y, radius, mouse_x, mouse_y)
+                self.refresh_tile(
+                        tile,
+                        step_x,
+                        step_y,
+                        radius,
+                        mouse_x,
+                        mouse_y
+                    )
 
-        # draw turn counter bottom-right in white
         try:
             turn_text = f"{self.step} / {self.network.max_frames}"
-            self._draw_right_text(turn_text, padding_right=20, padding_bottom=20, color=pyray.RAYWHITE, font_size=20)
+            self._draw_right_text(
+                    turn_text,
+                    padding_right=20,
+                    padding_bottom=20,
+                    color=pyray.RAYWHITE,
+                    font_size=20
+                )
         except Exception:
             pass
 
@@ -379,16 +391,17 @@ class Visualizer:
         self.add_action_to_queue(self.draw_map, persistent=True)
         self.add_action_to_queue(pyray.end_drawing, persistent=True)
         self.add_action_to_queue(
-                lambda: infos_dict.update({"pressed_key": pyray.get_key_pressed()}),
+                lambda: infos_dict.update(
+                        {"pressed_key": pyray.get_key_pressed()}
+                    ),
                 persistent=True
             )
         self.add_action_to_queue(
                 lambda: self.process_keys(
                     infos_dict.get("pressed_key")
                 ),
-                persistent=True                
+                persistent=True
                 )
-
 
         while not pyray.window_should_close():
             for _ in range(self.frame_action_queue.qsize()):

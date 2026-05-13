@@ -3,7 +3,6 @@ from .connection.connection import Connection
 from .network_object import NetworkObject
 from .drone.drone import Drone
 from functools import singledispatchmethod
-from typing import TextIO
 
 
 class Network:
@@ -171,7 +170,9 @@ class Network:
 
         clamped_step = min(self.max_frames, max(0, step))
 
-        for zone, drones in self.zone_drones_by_step.get(clamped_step, {}).items():
+        for zone, drones in self.zone_drones_by_step.get(
+                    clamped_step, {}
+                ).items():
             zone.drones = list(drones)
 
         for connection, drones in self.connection_drones_by_step.get(
@@ -185,7 +186,9 @@ class Network:
 
         zone_state: dict[str, list[str]] = {
             zone.name: [drone.id for drone in drones]
-            for zone, drones in self.zone_drones_by_step.get(clamped_step, {}).items()
+            for zone, drones in self.zone_drones_by_step.get(
+                    clamped_step, {}
+                ).items()
         }
         connection_state: dict[str, list[str]] = {
             connection.name: [drone.id for drone in drones]

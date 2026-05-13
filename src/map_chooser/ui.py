@@ -16,6 +16,7 @@ class Keys(Enum):
     ENTER = "\n"
     ENTER2 = "\r"
 
+
 class ChooserUI:
     def __init__(self) -> None:
         self._index_cache: dict[str, int] = {}
@@ -104,11 +105,12 @@ class ChooserUI:
         dirs, files, updated_choices = self.get_choices(updated_path)
         self._current_files = files
         self._current_path = updated_path
-        updated_index = self.restore_index(updated_path, len(updated_choices) - 1)
+        updated_index = self.restore_index(
+                updated_path, len(updated_choices) - 1
+            )
 
         self.render_menu(updated_choices, updated_index, clear=False)
         return updated_path, dirs, files, updated_choices, updated_index
-
 
     def start_ui(self, base_path: str = "./maps") -> str | None:
         current_path = os.path.abspath(base_path)
@@ -140,7 +142,7 @@ class ChooserUI:
                     if index > 0:
                         index -= 1
                         self.render_menu(choices, index)
-                
+
                 case Keys.RIGHT.value | Keys.ENTER.value | Keys.ENTER2.value:
                     selected_choice = choices[index]
 
@@ -155,12 +157,13 @@ class ChooserUI:
                         )
 
                     elif selected_choice in dirs:
-                        current_path, dirs, files, choices, index = self.switch_directory(
-                            current_path,
-                            index,
-                            choices,
-                            os.path.join(current_path, selected_choice),
-                        )
+                        current_path, dirs, files, choices, index =\
+                            self.switch_directory(
+                                current_path,
+                                index,
+                                choices,
+                                os.path.join(current_path, selected_choice),
+                            )
 
                     else:
                         TerminalStyler.clear_x_lines(len(choices))
@@ -168,9 +171,10 @@ class ChooserUI:
 
                 case Keys.LEFT.value:
                     if self.can_go_up(current_path):
-                        current_path, dirs, files, choices, index = self.switch_directory(
-                            current_path,
-                            index,
-                            choices,
-                            os.path.dirname(current_path),
-                        )
+                        current_path, dirs, files, choices, index =\
+                            self.switch_directory(
+                                current_path,
+                                index,
+                                choices,
+                                os.path.dirname(current_path),
+                            )
