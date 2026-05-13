@@ -75,13 +75,8 @@ class DFS:
                 self.bfs.grow_with_time_step()
                 continue
 
-            # print([
-            #     o.node.real_node.name for o in path if isinstance(o, BFSNode)
-            # ])
-
             flow: int = self.get_blocking_flow(path)
             max_flow += flow
-            # print(flow)
             self.add_passage(path, flow)
             self.store_path(path, flow)
 

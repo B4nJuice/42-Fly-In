@@ -12,16 +12,18 @@ if __name__ == "__main__":
     map_path: str | None = chooser.start_ui()
 
     if not map_path:
+        print("No path selected.")
         exit(0)
 
-    parser = Parser(map_path)
-    parser.parse_map()
-    parser.network.verify()
+    try:
+        parser = Parser(map_path)
+        parser.parse_map()
+        parser.network.verify()
+        parser.network.create_all_drones()
+    except Exception as e:
+        print(e)
+        exit(1)
 
-    parser.network.create_all_drones()
-
-    print(parser.network.nb_drones)
-    print(len(parser.network.drones))
 
     visualizer = Visualizer(parser.network)
     time_graph = TimeGraph(parser.network)
@@ -30,8 +32,6 @@ if __name__ == "__main__":
 
     dfs = DFS(bfs)
 
-    print(dfs.get_all_paths())
-    print(bfs.actual_level)
+    dfs.get_all_paths()
+    bfs.actual_level
     visualizer.start_display()
-
-    # TODO: Erase prints

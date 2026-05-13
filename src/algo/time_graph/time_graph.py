@@ -47,7 +47,6 @@ class TimeGraph:
                 self.step_dict.setdefault(self.step + 1, set()).add(
                     destination_node
                 )
-                # print(node.time, node.real_node.name)
                 continue
 
             else:
@@ -73,6 +72,4 @@ class TimeGraph:
                 node.add_connection(next_node, connection)
                 self.step_dict.setdefault(time, set()).add(next_node)
 
-            # print(node.time, node.real_node.name)
-        # print("\n------------------------\n")
         self.step += 1

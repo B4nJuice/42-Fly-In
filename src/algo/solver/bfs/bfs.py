@@ -31,11 +31,9 @@ class BFS:
             if not self.end_reached:
                 if node.node.real_node.metadata.end_hub:
                     self.end_reached = True
-            # print(self.actual_level,node.node.real_node.name, node.node.time)
             for n in node.get_connected_nodes():
                 self.bfs_level.setdefault(self.actual_level + 1, set()).add(n)
 
-        # print("\n--------------------\n")
 
         self.actual_level += 1
 
