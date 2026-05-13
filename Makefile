@@ -1,5 +1,5 @@
 run:
-	uv run python3 -B -m src
+	@uv run python3 -B -m src
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

@@ -7,9 +7,12 @@ from .map_chooser.ui import chooserUI
 
 
 if __name__ == "__main__":
-    chooser = chooserUI()
+    chooser: chooserUI = chooserUI()
 
-    map_path: str = chooser.start_ui()
+    map_path: str | None = chooser.start_ui()
+
+    if not map_path:
+        exit(0)
 
     parser = Parser(map_path)
     parser.parse_map()

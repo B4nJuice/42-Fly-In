@@ -12,6 +12,7 @@ from typing import Any
 
 class Visualizer:
     def __init__(self, network: Network) -> None:
+        pyray.set_trace_log_level(pyray.LOG_NONE)
         self.network: Network = network
         self.action_queue: Queue = Queue()
         self.frame_action_queue: Queue = Queue()
@@ -329,7 +330,6 @@ class Visualizer:
         self.step = min(self.network.max_frames, max(0, self.step + add))
 
     def start_display(self) -> None:
-        pyray.set_trace_log_level(pyray.LOG_NONE)
         pyray.init_window(1, 1, "Fly-In")
 
         monitor = pyray.get_current_monitor()
