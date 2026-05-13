@@ -13,7 +13,8 @@ class Keys(Enum):
     UP = "\033[A"
     DOWN = "\033[B"
     ESC = "\033"
-
+    ENTER = "\n"
+    ENTER2 = "\r"
 
 class chooserUI:
     def __init__(self) -> None:
@@ -140,15 +141,17 @@ class chooserUI:
                         index -= 1
                         self.render_menu(choices, index)
                 
-                case Keys.RIGHT.value:
+                case Keys.RIGHT.value | Keys.ENTER.value | Keys.ENTER2.value:
                     selected_choice = choices[index]
 
                     if selected_choice == "..":
-                        current_path, dirs, files, choices, index = self.switch_directory(
-                            current_path,
-                            index,
-                            choices,
-                            os.path.dirname(current_path),
+                        current_path, dirs, files, choices, index = (
+                            self.switch_directory(
+                                current_path,
+                                index,
+                                choices,
+                                os.path.dirname(current_path),
+                            )
                         )
 
                     elif selected_choice in dirs:
@@ -162,8 +165,7 @@ class chooserUI:
                     else:
                         TerminalStyler.clear_x_lines(len(choices))
                         return os.path.join(current_path, selected_choice)
-                    
-                
+
                 case Keys.LEFT.value:
                     if self.can_go_up(current_path):
                         current_path, dirs, files, choices, index = self.switch_directory(

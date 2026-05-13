@@ -1,4 +1,4 @@
 # TODO
 - [ ] end reached ?
-- [ ] tx/tmax
-- [ ] enter key ui
+- [x] tx/tmax
+- [x] enter key ui

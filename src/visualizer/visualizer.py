@@ -89,6 +89,21 @@ class Visualizer:
         pyray.draw_text(text, text_x, text_y, font_size, color)
 
     @staticmethod
+    def _draw_right_text(
+                text: str,
+                padding_right: int,
+                padding_bottom: int,
+                color: pyray.Color,
+                font_size: int = 20
+            ) -> None:
+        text_width = pyray.measure_text(text, font_size)
+        screen_w = pyray.get_screen_width()
+        screen_h = pyray.get_screen_height()
+        text_x = max(0, screen_w - padding_right - text_width)
+        text_y = max(0, screen_h - padding_bottom - font_size)
+        pyray.draw_text(text, text_x, text_y, font_size, color)
+
+    @staticmethod
     def _is_point_in_circle(
                 point_x: int,
                 point_y: int,
@@ -264,6 +279,13 @@ class Visualizer:
         for row in self.map.map:
             for tile in row:
                 self.refresh_tile(tile, step_x, step_y, radius, mouse_x, mouse_y)
+
+        # draw turn counter bottom-right in white
+        try:
+            turn_text = f"{self.step} / {self.network.max_frames}"
+            self._draw_right_text(turn_text, padding_right=20, padding_bottom=20, color=pyray.RAYWHITE, font_size=20)
+        except Exception:
+            pass
 
     def create_map(self) -> None:
         if not self.network.zones:
