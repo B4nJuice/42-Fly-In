@@ -2,6 +2,7 @@ from src.network.network import Network
 from src.network.network_object import NetworkObject
 from src.network.metadata.zone_metadata import ZoneType
 from functools import lru_cache
+from src.parser.parser import ConfigError
 from .node import Node
 from .connection_node import ConnectionNode
 
@@ -14,6 +15,10 @@ class TimeGraph:
         self.step_dict: dict[int, set[Node]] = {
                 0: {self.create_node(0, self.network.start_hub)}
             }
+
+    @staticmethod
+    def get_real_nodes(nodes: set[Node]) -> set[NetworkObject]:
+        return {node.real_node for node in nodes}
 
     def add_connection(
                 self,
@@ -37,7 +42,16 @@ class TimeGraph:
         return created_node
 
     def next_step(self) -> None:
-        for node in self.step_dict.get(self.step, set()):
+        current_nodes = self.step_dict.get(self.step, set())
+        previous_nodes = self.step_dict.get(self.step - 1, set())
+
+        if self.step > 1:
+            if (
+                    self.get_real_nodes(current_nodes)
+                    == self.get_real_nodes(previous_nodes)
+                ) and not [n for n in self.get_real_nodes(current_nodes) if n.metadata.end_hub]:
+                raise ConfigError("end_hub is not reachable.")
+        for node in current_nodes:
             if isinstance(node, ConnectionNode):
                 destination_node: Node = self.create_node(
                     self.step + 1,

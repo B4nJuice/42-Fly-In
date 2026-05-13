@@ -10,3 +10,12 @@ class Logger:
                 ),
                 TerminalStyler.colored_text([Colors.YELLOW], message)
             )
+
+    @staticmethod
+    def log_error(error: Exception) -> None:
+        print(
+                TerminalStyler.colored_text(
+                    [Colors.BOLD, Colors.RED], "[ERROR]"
+                ),
+                TerminalStyler.colored_text([Colors.RED], str(error))
+            )
