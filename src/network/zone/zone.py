@@ -20,7 +20,6 @@ class Zone(NetworkObject):
         self.name: str = name
         self.metadata: ZoneMetadata = metadata
         self.coords: Coords = coords
-        self.is_special: bool = False
         self.connections: list[NetworkObject] = []
         self.drones: list[Drone] = []
 
