@@ -3,6 +3,7 @@ from .connection.connection import Connection
 from .network_object import NetworkObject
 from .drone.drone import Drone
 from functools import singledispatchmethod
+from typing import TextIO
 
 
 class Network:
@@ -91,7 +92,7 @@ class Network:
         from ..parser.parser import FormatError
         for connection in self.connections:
             try:
-                zone1_name, zone2_name = connection.raw_connection.split(
+                zone1_name, zone2_name = connection.name.split(
                         "-", maxsplit=1
                     )
             except Exception:
@@ -104,12 +105,12 @@ class Network:
 
             if not all([zone1, zone2]):
                 raise ValueError(
-                        f"unknown zone names {connection.raw_connection}"
+                        f"unknown zone names {connection.name}"
                     )
 
             if zone1_name == zone2_name:
                 raise ValueError(
-                    f"invalid connection '{connection.raw_connection}':"
+                    f"invalid connection '{connection.name}':"
                     " duplicate zone."
                     )
 
@@ -187,7 +188,7 @@ class Network:
             for zone, drones in self.zone_drones_by_step.get(clamped_step, {}).items()
         }
         connection_state: dict[str, list[str]] = {
-            connection.raw_connection: [drone.id for drone in drones]
+            connection.name: [drone.id for drone in drones]
             for connection, drones in self.connection_drones_by_step.get(
                 clamped_step,
                 {}

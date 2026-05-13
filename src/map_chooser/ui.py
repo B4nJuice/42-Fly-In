@@ -1,4 +1,4 @@
-from .map_chooser import mapChooser
+from .map_chooser import MapChooser
 from .utils.terminal import TerminalStyler, Colors
 from src.parser.parser import Parser
 import contextlib
@@ -16,7 +16,7 @@ class Keys(Enum):
     ENTER = "\n"
     ENTER2 = "\r"
 
-class chooserUI:
+class ChooserUI:
     def __init__(self) -> None:
         self._index_cache: dict[str, int] = {}
         self._current_files: list[str] = []
@@ -72,7 +72,7 @@ class chooserUI:
         return os.path.dirname(path) != path
 
     def get_choices(self, path: str) -> tuple[list[str], list[str], list[str]]:
-        dirs, files = mapChooser.get_choices(path)
+        dirs, files = MapChooser.get_choices(path)
         choices: list[str] = []
 
         if self.can_go_up(path):

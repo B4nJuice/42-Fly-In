@@ -64,16 +64,16 @@ class Parser:
     @staticmethod
     def parse_connection(raw_value: str) -> Connection:
         datas = raw_value.strip().split(maxsplit=1)
-        raw_connection: str = ""
+        name: str = ""
         metadata: ConnectionMetadata | None = None
 
         match len(datas):
             case 1:
-                raw_connection = datas[0]
+                name = datas[0]
                 metadata = ConnectionMetadata("[]")
 
             case 2:
-                raw_connection = datas[0]
+                name = datas[0]
                 metadata = ConnectionMetadata(datas[1])
 
             case _:
@@ -82,7 +82,7 @@ class Parser:
                         "format = <zone1-zone2> [metadata]."
                     )
 
-        return Connection(raw_connection, metadata)
+        return Connection(name, metadata)
 
     @staticmethod
     def to_list(value: Any) -> list[Any]:

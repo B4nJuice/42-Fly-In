@@ -1,16 +1,41 @@
+from argparse import ArgumentParser
+
 from .parser.parser import Parser
+from .network.network import Network, NetworkObject
 from .visualizer.visualizer import Visualizer
 from .algo.time_graph.time_graph import TimeGraph
 from .algo.solver.bfs.bfs import BFS
 from .algo.solver.dfs.dfs import DFS
-from .map_chooser.ui import chooserUI
+from .map_chooser.ui import ChooserUI
 from .ui.logger import Logger
 
 
 if __name__ == "__main__":
-    chooser: chooserUI = chooserUI()
+    arg_parser: ArgumentParser = ArgumentParser()
+    arg_parser.add_argument(
+        "--map-path", "-m",
+        dest="map_path",
+        default=None,
+        help="Path to the map file to use."
+    )
+    arg_parser.add_argument(
+        "--map-location", "-ml",
+        dest="map_location",
+        default="./maps",
+        help="Path to the map file to use."
+    )
+    arg_parser.add_argument(
+        "--output-file", "-o",
+        dest="output_file",
+        default="output.txt",
+        help="File where the level summary will be written."
+    )
+    args = arg_parser.parse_args()
 
-    map_path: str | None = chooser.start_ui()
+    chooser: ChooserUI = ChooserUI()
+
+    map_path: str | None = args.map_path or chooser.start_ui(args.map_location)
+    output_file: str = args.output_file
 
     if not map_path:
         Logger.log_warning("No path selected.")
@@ -19,19 +44,41 @@ if __name__ == "__main__":
     try:
         parser = Parser(map_path)
         parser.parse_map()
-        parser.network.verify()
-        parser.network.create_all_drones()
+        
+        network: Network = parser.network
+        
+        network.verify()
+        network.create_all_drones()
 
-        visualizer = Visualizer(parser.network)
-        time_graph = TimeGraph(parser.network)
+        visualizer = Visualizer(network)
+        time_graph = TimeGraph(network)
 
         bfs = BFS(time_graph)
 
         dfs = DFS(bfs)
 
         dfs.get_all_paths()
-        bfs.actual_level
+
+        output_lines: list[str] = []
+        for level in range(1, bfs.actual_level + 1):
+            level_status: list[str] = []
+            for drone in parser.network.drones:
+                last_position: NetworkObject = drone.zone_by_step.get(level - 1, drone.connection_by_step.get(level - 1))
+                position: NetworkObject = drone.zone_by_step.get(level, drone.connection_by_step.get(level))
+
+                if position != last_position:
+                    level_status.append(f"{drone.id}-{position.name}")
+            output_lines.append(" ".join(level_status))
+
+
+        try:
+            with open(output_file, "w", encoding="utf-8") as output_handle:
+                output_handle.write("\n".join(output_lines))
+        except Exception as e:
+            Logger.log_error(e)
+
         visualizer.start_display()
+
     except Exception as e:
         Logger.log_error(e)
         exit(1)

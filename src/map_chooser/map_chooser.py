@@ -1,7 +1,7 @@
 import os
 
 
-class mapChooser:
+class MapChooser:
     @staticmethod
     def get_choices(base_path: str) -> tuple[list[str], list[str]]:
         try:

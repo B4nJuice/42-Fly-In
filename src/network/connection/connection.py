@@ -6,10 +6,10 @@ from ..drone.drone import Drone
 class Connection(NetworkObject):
     def __init__(
                 self,
-                raw_connection: str,
+                name: str,
                 metadata: ConnectionMetadata
             ) -> None:
-        self.raw_connection: str = raw_connection
+        self.name: str = name
         self.metadata: ConnectionMetadata = metadata
         self.zone1: NetworkObject | None = None
         self.zone2: NetworkObject | None = None
