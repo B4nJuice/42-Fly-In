@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Callable
 
 
 class MetadataError(Exception):
@@ -40,7 +40,7 @@ class MetadataUtils:
     @staticmethod
     def convert_metadata_types(
                 metadata: dict[str, str],
-                types: dict[str, callable]
+                types: dict[str, Callable]
             ) -> dict[str, Any]:
 
         converted_metadata: dict[str, Any] = {}

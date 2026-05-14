@@ -1,6 +1,6 @@
 from . metadata_interface import MetadataInterface
 from .utils import MetadataUtils, MetadataError
-from typing import Any
+from typing import Any, Callable
 
 
 class ConnectionMetadata(MetadataInterface):
@@ -9,7 +9,7 @@ class ConnectionMetadata(MetadataInterface):
             "max_link_capacity": 1,
         }
 
-        self.types: dict[str, callable] = {
+        self.types: dict[str, Callable] = {
             "max_link_capacity": int,
         }
 

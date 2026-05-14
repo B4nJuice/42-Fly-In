@@ -13,7 +13,7 @@ class TimeGraph:
         self.nodes: list[Node] = []
         self.step: int = 0
         self.step_dict: dict[int, set[Node]] = {
-                0: {self.create_node(0, self.network.start_hub)}
+            0: {self.create_node(0, self.network.get_start_hub())}
             }
 
     @staticmethod

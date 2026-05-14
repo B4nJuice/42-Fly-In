@@ -12,7 +12,7 @@ from typing import Any
 
 class Visualizer:
     def __init__(self, network: Network) -> None:
-        pyray.set_trace_log_level(pyray.LOG_NONE)
+        pyray.set_trace_log_level(7)
         self.network: Network = network
         self.action_queue: Queue = Queue()
         self.frame_action_queue: Queue = Queue()

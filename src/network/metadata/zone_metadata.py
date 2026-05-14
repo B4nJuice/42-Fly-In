@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Callable
 from .utils import MetadataUtils, MetadataError
 from .metadata_interface import MetadataInterface
 from enum import Enum
@@ -39,7 +39,7 @@ class ZoneMetadata(MetadataInterface):
             "max_drones": 1,
         }
 
-        self.types: dict[str, callable] = {
+        self.types: dict[str, Callable] = {
             "zone": ZoneType,
             "color": self.get_color,
             "max_drones": int,

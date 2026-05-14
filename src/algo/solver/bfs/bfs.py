@@ -92,14 +92,15 @@ class BFS:
             ) -> BFSEdge | None:
         capacity: int = 0
 
-        try:
+        if real_connection is None:
+            capacity = node1.capacity
+
+        else:
             capacity = real_connection.metadata.metadata.get(
                     "max_link_capacity"
                 )
-        except Exception:
-            capacity = node1.capacity
 
         if capacity <= 0:
-            return
+            return None
 
         return BFSEdge(node1, node2, capacity, real_connection)

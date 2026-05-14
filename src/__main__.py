@@ -1,7 +1,8 @@
 from argparse import ArgumentParser
 
 from .parser.parser import Parser
-from .network.network import Network, NetworkObject
+from .network.network import Network
+from .network.network_object import NetworkObject
 from .visualizer.visualizer import Visualizer
 from .algo.time_graph.time_graph import TimeGraph
 from .algo.solver.bfs.bfs import BFS
@@ -63,11 +64,20 @@ if __name__ == "__main__":
         for level in range(1, bfs.actual_level + 1):
             level_status: list[str] = []
             for drone in parser.network.drones:
+
+                last_position_drone: NetworkObject | None =\
+                    drone.connection_by_step.get(level - 1)
+                position_drone: NetworkObject | None =\
+                    drone.connection_by_step.get(level)
+
+                if not (last_position_drone and position_drone):
+                    continue
+
                 last_position: NetworkObject = drone.zone_by_step.get(
-                        level - 1, drone.connection_by_step.get(level - 1)
+                        level - 1, last_position_drone
                     )
                 position: NetworkObject = drone.zone_by_step.get(
-                        level, drone.connection_by_step.get(level)
+                        level, position_drone
                     )
 
                 if position != last_position:

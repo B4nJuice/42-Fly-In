@@ -7,9 +7,9 @@ from functools import singledispatchmethod
 
 class Network:
     def __init__(self) -> None:
-        self.nb_drones: int | None = None
-        self.start_hub: Zone = None
-        self.end_hub: Zone = None
+        self.nb_drones: int = -1
+        self.start_hub: Zone | None = None
+        self.end_hub: Zone | None = None
         self.zones: list[Zone] = []
         self.connections: list[Connection] = []
         self.drones: list[Drone] = []
@@ -20,25 +20,36 @@ class Network:
             dict[Connection, list[Drone]]
         ] = {}
 
+    def get_start_hub(self) -> Zone:
+        if self.start_hub is None:
+            raise Exception("start_hub has not been declared")
+        return self.start_hub
+
+    def get_end_hub(self) -> Zone:
+        if self.end_hub is None:
+            raise Exception("end_hub has not been declared")
+        return self.end_hub
+
     def create_all_drones(self) -> None:
         for _ in range(self.nb_drones):
             self.create_drone()
 
         self.set_state_history(
-            {0: {self.start_hub: list(self.drones)}},
+            {0: {self.get_start_hub(): list(self.drones)}},
             {0: {}}
         )
 
     def create_drone(self) -> None:
         new_drone: Drone = Drone(f"D{len(self.drones)}")
         self.drones.append(new_drone)
-        self.start_hub.drones.append(new_drone)
-        new_drone.zone_by_step[0] = self.start_hub
+        start = self.get_start_hub()
+        start.drones.append(new_drone)
+        new_drone.zone_by_step[0] = start
 
     def set_nb_drones(self, nb_drones: int) -> None:
         if nb_drones <= 0:
             raise ValueError("nb_drones has to be a positive integer.")
-        if self.nb_drones is None:
+        if self.nb_drones == -1:
             self.nb_drones = nb_drones
         else:
             raise ValueError("nb_drones can be declared only once.")

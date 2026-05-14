@@ -12,6 +12,13 @@ class DFS:
         self.bfs: BFS = bfs
         self.paths: list[list[BFSNode | BFSEdge]] = []
 
+    @staticmethod
+    def get_starting_node(path: list[BFSNode | BFSEdge]) -> BFSNode:
+        if isinstance(path[-1], BFSEdge):
+            raise Exception("starting_nod has to be a node, not a connection.")
+
+        return path[-1]
+
     def create_path(
                 self,
                 path: list[BFSNode | BFSEdge],
@@ -19,7 +26,7 @@ class DFS:
                 visited_edges: set[BFSEdge],
                 dead_ends: set[BFSNode]
             ) -> list[BFSNode | BFSEdge] | None:
-        starting_node: BFSNode = path[-1]
+        starting_node: BFSNode = self.get_starting_node(path)
 
         if starting_node in dead_ends:
             return None
@@ -51,7 +58,8 @@ class DFS:
                     if next_node.node.real_node.metadata.end_hub:
                         return path
 
-                    new_path: list[BFSNode | BFSEdge] = self.create_path(
+                    new_path: list[BFSNode | BFSEdge] | None =\
+                        self.create_path(
                             path, visited, visited_edges, dead_ends
                         )
 
@@ -119,10 +127,11 @@ class DFS:
             self.add_zone_state(
                 zone_history,
                 step,
-                self.bfs.time_graph.network.start_hub,
+                self.bfs.time_graph.network.get_start_hub(),
                 drone
             )
-            drone.zone_by_step[step] = self.bfs.time_graph.network.start_hub
+            drone.zone_by_step[step] =\
+                self.bfs.time_graph.network.get_start_hub()
 
     def apply_paths_to_network(self) -> None:
         network = self.bfs.time_graph.network
@@ -192,14 +201,15 @@ class DFS:
 
         if not zone_history:
             for drone in network.drones:
-                self.add_zone_state(zone_history, 0, network.start_hub, drone)
-                drone.zone_by_step[0] = network.start_hub
+                start = network.get_start_hub()
+                self.add_zone_state(zone_history, 0, start, drone)
+                drone.zone_by_step[0] = start
 
         for drone in network.drones:
             arrival_steps = [
                 step
                 for step, zone in drone.zone_by_step.items()
-                if zone is network.end_hub
+                if zone is network.get_end_hub()
             ]
 
             if not arrival_steps:
@@ -210,8 +220,9 @@ class DFS:
                 if drone.connection_by_step.get(step) is not None:
                     continue
 
-                self.add_zone_state(zone_history, step, network.end_hub, drone)
-                drone.zone_by_step[step] = network.end_hub
+                end = network.get_end_hub()
+                self.add_zone_state(zone_history, step, end, drone)
+                drone.zone_by_step[step] = end
 
         network.set_state_history(zone_history, connection_history)
 
