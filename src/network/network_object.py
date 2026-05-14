@@ -1,12 +1,7 @@
-from abc import ABC
+from typing import Protocol
 from .metadata.metadata_interface import MetadataInterface
 
 
-class NetworkObject(ABC):
-    @property
-    def name(self) -> str:
-        pass
-
-    @property
-    def metadata(self) -> MetadataInterface:
-        pass
+class NetworkObject(Protocol):
+    name: str
+    metadata: MetadataInterface
