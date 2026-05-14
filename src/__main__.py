@@ -2,13 +2,17 @@ from argparse import ArgumentParser
 
 from .parser.parser import Parser
 from .network.network import Network
-from .network.network_object import NetworkObject
 from .visualizer.visualizer import Visualizer
 from .algo.time_graph.time_graph import TimeGraph
 from .algo.solver.bfs.bfs import BFS
 from .algo.solver.dfs.dfs import DFS
 from .map_chooser.ui import ChooserUI
 from .ui.logger import Logger
+from typing import TYPE_CHECKING, Union
+
+if TYPE_CHECKING:
+    from src.network.zone.zone import Zone
+    from src.network.connection.connection import Connection
 
 
 if __name__ == "__main__":
@@ -65,18 +69,18 @@ if __name__ == "__main__":
             level_status: list[str] = []
             for drone in parser.network.drones:
 
-                last_position_drone: NetworkObject | None =\
+                last_position_drone: Union['Connection', None] =\
                     drone.connection_by_step.get(level - 1)
-                position_drone: NetworkObject | None =\
+                position_drone: Union['Connection', None] =\
                     drone.connection_by_step.get(level)
 
                 if not (last_position_drone and position_drone):
                     continue
 
-                last_position: NetworkObject = drone.zone_by_step.get(
+                last_position: 'Zone' | 'Connection' = drone.zone_by_step.get(
                         level - 1, last_position_drone
                     )
-                position: NetworkObject = drone.zone_by_step.get(
+                position: 'Zone' | 'Connection' = drone.zone_by_step.get(
                         level, position_drone
                     )
 

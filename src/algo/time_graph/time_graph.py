@@ -1,10 +1,14 @@
 from src.network.network import Network
-from src.network.network_object import NetworkObject
 from src.network.metadata.zone_metadata import ZoneType
 from functools import lru_cache
 from src.parser.parser import ConfigError
 from .node import Node
 from .connection_node import ConnectionNode
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.network.zone.zone import Zone
 
 
 class TimeGraph:
@@ -17,14 +21,14 @@ class TimeGraph:
             }
 
     @staticmethod
-    def get_real_nodes(nodes: set[Node]) -> set[NetworkObject]:
+    def get_real_nodes(nodes: set[Node]) -> set['Zone']:
         return {node.real_node for node in nodes}
 
     def add_connection(
                 self,
                 initial_node: Node,
                 next_time: int,
-                next_real_node: NetworkObject
+                next_real_node: 'Zone'
             ):
         new_node: Node = self.create_node(next_time, next_real_node)
         new_node.add_connection(initial_node)
@@ -33,7 +37,7 @@ class TimeGraph:
     def create_node(
                 self,
                 time: int,
-                real_node: NetworkObject,
+                real_node: 'Zone',
                 node_type: type[Node] = Node
             ) -> Node:
 
