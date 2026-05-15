@@ -28,6 +28,7 @@ class MapChooser:
                         base_path, item
                     ))
             ]
+
             files: list[str] = [item for item in items if item not in dirs]
         except Exception:
             return ([], [])
