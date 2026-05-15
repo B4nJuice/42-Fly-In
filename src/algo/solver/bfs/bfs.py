@@ -1,18 +1,20 @@
 from src.algo.time_graph.time_graph import TimeGraph
 from src.algo.time_graph.node import Node
 from src.network.connection.connection import Connection
-from functools import lru_cache
 from .bfs_node import BFSNode
 from .bfs_edge import BFSEdge
+from functools import lru_cache
+from typing import cast
 
 
 class BFS:
     def __init__(self, time_graph: TimeGraph) -> None:
         self.time_graph: TimeGraph = time_graph
-        self.start_node: BFSNode = self.create_bfs_node(
-                list(self.time_graph.step_dict.get(0))[0],
+        self.start_node: BFSNode = cast(BFSNode, self.create_bfs_node(
+                list(
+                    cast(set, self.time_graph.step_dict.get(0)))[0],
                 0
-            )
+            ))
 
         self.search_edges(self.start_node)
         self.bfs_level: dict[int, set[BFSNode]] = {0: set([self.start_node])}
@@ -43,7 +45,8 @@ class BFS:
         for node2, connection in node.node.connections:
             if node2.time <= node.node.time:
                 continue
-            new_node: BFSNode = self.create_bfs_node(node2, node.level + 1)
+            new_node: BFSNode | None =\
+                self.create_bfs_node(node2, node.level + 1)
 
             if new_node:
                 if any(edge.node2 == new_node for edge in node.edges):
@@ -77,10 +80,12 @@ class BFS:
 
     @lru_cache(maxsize=None)
     def create_bfs_node(self, node: Node, level: int) -> BFSNode | None:
-        capacity: int = node.real_node.metadata.metadata.get("max_drones")
+        capacity: int = cast(int, node.real_node.metadata.metadata.get(
+                "max_drones"
+            ))
 
         if capacity <= 0:
-            return
+            return None
 
         return BFSNode(node, level, capacity)
 
@@ -96,9 +101,9 @@ class BFS:
             capacity = node1.capacity
 
         else:
-            capacity = real_connection.metadata.metadata.get(
+            capacity = cast(int, real_connection.metadata.metadata.get(
                     "max_link_capacity"
-                )
+                ))
 
         if capacity <= 0:
             return None
