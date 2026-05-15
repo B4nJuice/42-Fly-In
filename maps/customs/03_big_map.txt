@@ -1,0 +1,173 @@
+# Huge irregular benchmark map
+# - same number of drones: 120000
+# - much larger, less square geometry
+# - many different routes with heavy split/merge structure
+# - every link keeps capacity >= 10000
+
+nb_drones: 120000
+
+start_hub: s 0 0 [color=green max_drones=120000]
+
+# Early split trunk
+hub: t1 1 -1 [color=yellow max_drones=90000]
+hub: t2 2 -1 [color=yellow max_drones=90000]
+hub: t3 3 -1 [color=yellow max_drones=90000]
+
+# North super corridor (high altitude, long and winding)
+hub: n1 4 -3 [color=blue max_drones=30000]
+hub: n2 5 -4 [color=blue max_drones=30000]
+hub: n3 7 -4 [zone=restricted color=violet max_drones=24000]
+hub: n4 9 -4 [color=blue max_drones=30000]
+hub: n5 11 -4 [zone=priority color=gold max_drones=34000]
+hub: n6 13 -3 [color=blue max_drones=30000]
+hub: n7 15 -3 [color=yellow max_drones=30000]
+
+# Mid corridor A (center, zig-zag)
+hub: m1 4 -1 [color=orange max_drones=28000]
+hub: m2 5 0 [color=orange max_drones=28000]
+hub: m3 7 -1 [zone=restricted color=purple max_drones=23000]
+hub: m4 8 0 [color=orange max_drones=28000]
+hub: m5 10 1 [zone=priority color=gold max_drones=32000]
+hub: m6 12 1 [color=orange max_drones=28000]
+hub: m7 14 0 [color=yellow max_drones=28000]
+
+# Mid corridor B (slightly below center)
+hub: p1 4 1 [color=crimson max_drones=26000]
+hub: p2 5 2 [color=crimson max_drones=26000]
+hub: p3 7 2 [zone=restricted color=violet max_drones=22000]
+hub: p4 9 2 [color=crimson max_drones=26000]
+hub: p5 11 2 [zone=priority color=gold max_drones=30000]
+hub: p6 13 2 [color=crimson max_drones=26000]
+hub: p7 15 2 [color=yellow max_drones=26000]
+
+# South corridor (deep and irregular)
+hub: q1 4 3 [color=maroon max_drones=28000]
+hub: q2 6 4 [color=maroon max_drones=28000]
+hub: q3 8 5 [zone=restricted color=purple max_drones=23000]
+hub: q4 10 4 [color=maroon max_drones=28000]
+hub: q5 12 4 [zone=priority color=gold max_drones=32000]
+hub: q6 14 3 [color=maroon max_drones=28000]
+hub: q7 16 3 [color=yellow max_drones=28000]
+
+# North branches and re-merges
+hub: nx1 6 -3 [color=gray max_drones=18000]
+hub: nx2 8 -3 [zone=restricted color=violet max_drones=15000]
+hub: nx3 10 -3 [color=gray max_drones=18000]
+
+# Mid branches
+hub: mx1 6 1 [color=brown max_drones=17000]
+hub: mx2 8 1 [zone=restricted color=purple max_drones=14000]
+hub: mx3 10 0 [color=brown max_drones=17000]
+
+# South branches
+hub: sx1 6 3 [color=darkred max_drones=17000]
+hub: sx2 8 3 [zone=restricted color=violet max_drones=14000]
+hub: sx3 10 3 [color=darkred max_drones=17000]
+
+# Collector/merge chain
+hub: c1 17 -1 [color=blue max_drones=70000]
+hub: c2 18 0 [color=blue max_drones=80000]
+hub: c3 19 1 [color=blue max_drones=90000]
+hub: c4 20 0 [color=blue max_drones=100000]
+
+end_hub: z 22 0 [color=green max_drones=120000]
+
+# Main split from start
+connection: s-t1 [max_link_capacity=30000]
+connection: t1-t2 [max_link_capacity=28000]
+connection: t2-t3 [max_link_capacity=28000]
+
+# First-level fan-out
+connection: t3-n1 [max_link_capacity=22000]
+connection: t3-m1 [max_link_capacity=22000]
+connection: t3-p1 [max_link_capacity=21000]
+connection: t2-q1 [max_link_capacity=21000]
+
+# North super corridor chain
+connection: n1-n2 [max_link_capacity=19000]
+connection: n2-n3 [max_link_capacity=17000]
+connection: n3-n4 [max_link_capacity=17000]
+connection: n4-n5 [max_link_capacity=18000]
+connection: n5-n6 [max_link_capacity=19000]
+connection: n6-n7 [max_link_capacity=20000]
+
+# Mid A chain
+connection: m1-m2 [max_link_capacity=18000]
+connection: m2-m3 [max_link_capacity=16000]
+connection: m3-m4 [max_link_capacity=16000]
+connection: m4-m5 [max_link_capacity=17000]
+connection: m5-m6 [max_link_capacity=18000]
+connection: m6-m7 [max_link_capacity=19000]
+
+# Mid B chain
+connection: p1-p2 [max_link_capacity=17000]
+connection: p2-p3 [max_link_capacity=15000]
+connection: p3-p4 [max_link_capacity=15000]
+connection: p4-p5 [max_link_capacity=16000]
+connection: p5-p6 [max_link_capacity=17000]
+connection: p6-p7 [max_link_capacity=18000]
+
+# South chain
+connection: q1-q2 [max_link_capacity=18000]
+connection: q2-q3 [max_link_capacity=16000]
+connection: q3-q4 [max_link_capacity=16000]
+connection: q4-q5 [max_link_capacity=17000]
+connection: q5-q6 [max_link_capacity=18000]
+connection: q6-q7 [max_link_capacity=19000]
+
+# Branch splits and merges (north)
+connection: n2-nx1 [max_link_capacity=13000]
+connection: nx1-nx2 [max_link_capacity=12000]
+connection: nx2-nx3 [max_link_capacity=12000]
+connection: nx3-n6 [max_link_capacity=13000]
+connection: n3-nx2 [max_link_capacity=11000]
+connection: nx1-m3 [max_link_capacity=11000]
+
+# Branch splits and merges (mid)
+connection: m2-mx1 [max_link_capacity=12000]
+connection: mx1-mx2 [max_link_capacity=11000]
+connection: mx2-mx3 [max_link_capacity=11000]
+connection: mx3-m6 [max_link_capacity=12000]
+connection: p2-mx1 [max_link_capacity=11000]
+connection: mx2-p4 [max_link_capacity=11000]
+
+# Branch splits and merges (south)
+connection: q2-sx1 [max_link_capacity=12000]
+connection: sx1-sx2 [max_link_capacity=11000]
+connection: sx2-sx3 [max_link_capacity=11000]
+connection: sx3-q6 [max_link_capacity=12000]
+connection: p4-sx2 [max_link_capacity=11000]
+connection: sx1-p5 [max_link_capacity=11000]
+
+# Cross-lane mesh (multiple reroutes)
+connection: n4-m4 [max_link_capacity=12000]
+connection: m4-p4 [max_link_capacity=12000]
+connection: p4-q4 [max_link_capacity=12000]
+connection: n5-m5 [max_link_capacity=13000]
+connection: m5-p5 [max_link_capacity=13000]
+connection: p5-q5 [max_link_capacity=13000]
+connection: n6-m6 [max_link_capacity=14000]
+connection: m6-p6 [max_link_capacity=14000]
+connection: p6-q6 [max_link_capacity=14000]
+
+# Late-stage merges into collectors
+connection: n7-c1 [max_link_capacity=22000]
+connection: m7-c1 [max_link_capacity=21000]
+connection: p7-c2 [max_link_capacity=20000]
+connection: q7-c2 [max_link_capacity=21000]
+connection: n6-c2 [max_link_capacity=18000]
+connection: m6-c2 [max_link_capacity=17000]
+connection: p6-c3 [max_link_capacity=17000]
+connection: q6-c3 [max_link_capacity=18000]
+
+# Collector spine and final fan-in
+connection: c1-c2 [max_link_capacity=40000]
+connection: c2-c3 [max_link_capacity=50000]
+connection: c3-c4 [max_link_capacity=60000]
+connection: c4-z [max_link_capacity=70000]
+
+# Additional final bypasses to avoid one single choke point
+connection: c1-c3 [max_link_capacity=35000]
+connection: c2-c4 [max_link_capacity=45000]
+connection: m7-c3 [max_link_capacity=20000]
+connection: p7-c4 [max_link_capacity=22000]
