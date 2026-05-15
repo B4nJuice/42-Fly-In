@@ -9,7 +9,7 @@ class ConnectionMetadata(MetadataInterface):
             "max_link_capacity": 1,
         }
 
-        self.types: dict[str, Callable] = {
+        self.types: dict[str, Callable[[str], Any]] = {
             "max_link_capacity": int,
         }
 

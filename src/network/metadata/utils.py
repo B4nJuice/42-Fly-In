@@ -40,19 +40,19 @@ class MetadataUtils:
     @staticmethod
     def convert_metadata_types(
                 metadata: dict[str, str],
-                types: dict[str, Callable]
+                types: dict[str, Callable[[str], Any]]
             ) -> dict[str, Any]:
 
         converted_metadata: dict[str, Any] = {}
 
         for key, value in metadata.items():
+
+            def first_param(x: str) -> str:
+                return x
+
             try:
-
-                def identity(x: str) -> str:
-                    return x
-
                 converted_metadata.update(
-                        {key: types.get(key, identity)(value)}
+                        {key: types.get(key, first_param)(value)}
                     )
             except Exception as e:
                 raise ConversionError(f"key: {key}, value:{value} {e}")

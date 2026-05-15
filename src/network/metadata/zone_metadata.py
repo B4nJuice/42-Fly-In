@@ -40,7 +40,7 @@ class ZoneMetadata(MetadataInterface):
             "max_drones": 1,
         }
 
-        self.types: dict[str, Callable] = {
+        self.types: dict[str, Callable[[str], Any]] = {
             "zone": ZoneType,
             "color": self.get_color,
             "max_drones": int,

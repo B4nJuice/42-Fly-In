@@ -14,8 +14,10 @@ class Visualizer:
     def __init__(self, network: Network) -> None:
         pyray.set_trace_log_level(7)
         self.network: Network = network
-        self.action_queue: Queue = Queue()
-        self.frame_action_queue: Queue = Queue()
+        self.action_queue: Queue[tuple[Callable[..., Any], list[Any]]] =\
+            Queue()
+        self.frame_action_queue: Queue[tuple[Callable[..., Any], list[Any]]] =\
+            Queue()
         self.background_color = pyray.BLACK
         self.tile_padding = 40
         self.step: int = 0
@@ -335,7 +337,7 @@ class Visualizer:
 
     def add_action_to_queue(
                 self,
-                function: Callable,
+                function: Callable[..., Any],
                 args: list[Any] | None = None,
                 persistent: bool = False
             ) -> None:
