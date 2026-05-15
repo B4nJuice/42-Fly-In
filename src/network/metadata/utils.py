@@ -47,8 +47,12 @@ class MetadataUtils:
 
         for key, value in metadata.items():
             try:
+
+                def identity(x: str) -> str:
+                    return x
+
                 converted_metadata.update(
-                        {key: types.get(key, lambda x: x)(value)}
+                        {key: types.get(key, identity)(value)}
                     )
             except Exception as e:
                 raise ConversionError(f"key: {key}, value:{value} {e}")

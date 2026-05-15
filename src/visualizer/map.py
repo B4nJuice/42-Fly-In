@@ -11,7 +11,7 @@ class Map:
 
         self.map: list[list[Tile]]
 
-    def normalize_coords(self, x: int, y: int) -> tuple[int]:
+    def normalize_coords(self, x: int, y: int) -> tuple[int, int]:
         return (x - self.min_x, y - self.min_y)
 
     def create_map(self) -> None:

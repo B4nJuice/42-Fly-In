@@ -1,8 +1,9 @@
-from typing import Any, Callable
 from .utils import MetadataUtils, MetadataError
 from .metadata_interface import MetadataInterface
-from enum import Enum
 from src.ui.logger import Logger
+
+from enum import Enum
+from typing import Any, Callable, cast
 
 
 class ZoneType(Enum):
@@ -75,7 +76,7 @@ class ZoneMetadata(MetadataInterface):
         if diff := (self.metadata.keys() - self.default_metadata.keys()):
             raise MetadataError(f"Invalid metadata fields : {diff}")
 
-        if self.metadata.get("max_drones") <= 0:
+        if cast(int, self.metadata.get("max_drones")) <= 0:
             raise MetadataError(
                     "max_drones field has to be a positive integer."
                 )

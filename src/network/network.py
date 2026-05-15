@@ -2,7 +2,9 @@ from .zone.zone import Zone
 from .connection.connection import Connection
 from .network_object import NetworkObject
 from .drone.drone import Drone
+
 from functools import singledispatchmethod
+from typing import cast
 
 
 class Network:
@@ -124,10 +126,10 @@ class Network:
                     " duplicate zone."
                     )
 
-            zone1.add_connection(connection)
-            zone2.add_connection(connection)
+            cast(Zone, zone1).add_connection(connection)
+            cast(Zone, zone2).add_connection(connection)
 
-            connection.set_zones(zone1, zone2)
+            connection.set_zones(cast(Zone, zone1), cast(Zone, zone2))
 
     def verify_zones(self) -> None:
         for zone in self.zones:
@@ -138,13 +140,13 @@ class Network:
 
         for c in self.connections:
             c.metadata.verify_metadata()
-            name_list: list[str] = [c.zone1.name, c.zone2.name]
+            name_list: list[str] = [c.get_zone_1().name, c.get_zone_2().name]
             name_list.sort()
             sorted_raw_zones: str = "-".join(name_list)
             connections_dict.setdefault(sorted_raw_zones, []).append(c)
 
-        for s, c in connections_dict.items():
-            if len(c) > 1:
+        for s, c_list in connections_dict.items():
+            if len(c_list) > 1:
                 raise ValueError(f"multiple connection for same zones '{s}'")
 
     def verify(self) -> None:

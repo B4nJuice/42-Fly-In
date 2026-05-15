@@ -35,9 +35,9 @@ class Zone(NetworkObject):
         connections: list[tuple['Zone', 'Connection']] = []
 
         for connection in self.connections:
-            if connection.zone1 is self:
-                connections.append((connection.zone2, connection))
+            if connection.get_zone_1() is self:
+                connections.append((connection.get_zone_2(), connection))
             else:
-                connections.append((connection.zone1, connection))
+                connections.append((connection.get_zone_1(), connection))
 
         return connections

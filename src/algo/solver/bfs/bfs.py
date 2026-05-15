@@ -12,7 +12,8 @@ class BFS:
         self.time_graph: TimeGraph = time_graph
         self.start_node: BFSNode = cast(BFSNode, self.create_bfs_node(
                 list(
-                    cast(set, self.time_graph.step_dict.get(0)))[0],
+                    cast(set[Node], self.time_graph.step_dict.get(0))
+                )[0],
                 0
             ))
 

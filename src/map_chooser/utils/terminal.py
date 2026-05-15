@@ -40,7 +40,7 @@ class TerminalStyler():
         print(f"\x1b[{x}B", end="", flush=True)
 
     @staticmethod
-    def clear_x_lines(x: int):
+    def clear_x_lines(x: int) -> None:
         for i in range(x):
             print("\x1b[1A", end="", flush=True)
             TerminalStyler.clear_current_line()

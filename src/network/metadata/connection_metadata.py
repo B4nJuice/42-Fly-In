@@ -1,10 +1,10 @@
 from . metadata_interface import MetadataInterface
 from .utils import MetadataUtils, MetadataError
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 
 class ConnectionMetadata(MetadataInterface):
-    def __init__(self, metadata: dict[str, Any]) -> None:
+    def __init__(self, metadata: str) -> None:
         self.default_metadata: dict[str, Any] = {
             "max_link_capacity": 1,
         }
@@ -27,7 +27,7 @@ class ConnectionMetadata(MetadataInterface):
         if diff := (self.metadata.keys() - self.default_metadata.keys()):
             raise MetadataError(f"Invalid metadata fields : {diff}")
 
-        if self.metadata.get("max_link_capacity") <= 0:
+        if cast(int, self.metadata.get("max_link_capacity")) <= 0:
             raise MetadataError(
                     "max_link_capacity field has to be a positive integer."
                 )

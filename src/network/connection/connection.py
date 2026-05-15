@@ -22,3 +22,13 @@ class Connection(NetworkObject):
     def set_zones(self, zone1: 'Zone', zone2: 'Zone') -> None:
         self.zone1 = zone1
         self.zone2 = zone2
+
+    def get_zone_1(self) -> 'Zone':
+        if not self.zone1:
+            raise Exception("connection.zone1 has to be set.")
+        return self.zone1
+
+    def get_zone_2(self) -> 'Zone':
+        if not self.zone2:
+            raise Exception("connection.zone2 has to be set.")
+        return self.zone2

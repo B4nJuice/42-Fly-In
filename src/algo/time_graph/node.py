@@ -19,5 +19,5 @@ class Node:
                 self,
                 node: 'Node',
                 connection: Connection | None = None
-            ):
+            ) -> None:
         self.connections.append((node, connection))

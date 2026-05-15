@@ -1,11 +1,12 @@
 from ..network.coords import Coords
-from ..network.network_object import NetworkObject
+from ..network.zone.zone import Zone
+from ..network.connection.connection import Connection
 
 
 class Tile:
     def __init__(self, coords: Coords) -> None:
         self.coords: Coords = coords
-        self.objects: list[NetworkObject] = []
+        self.objects: list[Zone | Connection] = []
 
-    def add_object(self, object: NetworkObject) -> None:
-        self.objects.append(object)
+    def add_object(self, _object: Zone | Connection) -> None:
+        self.objects.append(_object)

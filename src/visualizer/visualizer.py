@@ -7,7 +7,7 @@ from .tile import Tile
 import pyray
 import math
 from queue import Queue
-from typing import Any
+from typing import Any, cast, Callable
 
 
 class Visualizer:
@@ -44,7 +44,7 @@ class Visualizer:
         return color_map.get(zone_color, pyray.BLUE)
 
     @staticmethod
-    def _get_zone_from_tile(tile) -> Zone | None:
+    def _get_zone_from_tile(tile: Tile) -> Zone | None:
         for obj in tile.objects:
             if isinstance(obj, Zone):
                 return obj
@@ -202,7 +202,7 @@ class Visualizer:
             x, y = self._get_zone_draw_position(tile, zone, step_x, step_y)
             color = self._zone_color_to_pyray(zone.metadata.metadata["color"])
             pyray.draw_circle(x, y, small_radius, color)
-            n_drones: int = len(zone.drones)
+            n_drones = len(zone.drones)
             if n_drones > 0:
                 marker_radius = max(1, int(small_radius * 0.5))
                 pyray.draw_circle(x, y, marker_radius, pyray.RAYWHITE)
@@ -242,11 +242,20 @@ class Visualizer:
         mouse_y = int(mouse_position.y)
 
         for connection in self.network.connections:
-            if connection.zone1 is None or connection.zone2 is None:
+            if connection.get_zone_1() is None\
+             or connection.get_zone_2() is None:
                 continue
 
-            x1, y1 = self._get_zone_center(connection.zone1, step_x, step_y)
-            x2, y2 = self._get_zone_center(connection.zone2, step_x, step_y)
+            x1, y1 = self._get_zone_center(
+                    connection.get_zone_1(),
+                    step_x,
+                    step_y
+                )
+            x2, y2 = self._get_zone_center(
+                    connection.get_zone_2(),
+                    step_x,
+                    step_y
+                )
             pyray.draw_line(x1, y1, x2, y2, pyray.DARKGRAY)
 
             center_x = (x1 + x2) // 2
@@ -326,7 +335,7 @@ class Visualizer:
 
     def add_action_to_queue(
                 self,
-                function: callable,
+                function: Callable,
                 args: list[Any] | None = None,
                 persistent: bool = False
             ) -> None:
@@ -354,10 +363,10 @@ class Visualizer:
 
     def process_keys(self, key_pressed: int) -> None:
         match key_pressed:
-            case pyray.KEY_LEFT:
+            case 263:  # pyray.KEY_LEFT:
                 self.update_step(-1)
 
-            case pyray.KEY_RIGHT:
+            case 262:  # pyray.KEY_RIGHT:
                 self.update_step(1)
 
     def update_step(self, add: int) -> None:
@@ -398,7 +407,7 @@ class Visualizer:
             )
         self.add_action_to_queue(
                 lambda: self.process_keys(
-                    infos_dict.get("pressed_key")
+                    cast(int, infos_dict.get("pressed_key"))
                 ),
                 persistent=True
                 )

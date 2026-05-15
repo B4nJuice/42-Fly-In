@@ -1,7 +1,7 @@
 from src.network.network import Network
 from src.network.metadata.zone_metadata import ZoneType
 from functools import lru_cache
-from src.parser.parser import ConfigError
+from src.parser.config_parser import ConfigError
 from .node import Node
 from .connection_node import ConnectionNode
 
@@ -29,7 +29,7 @@ class TimeGraph:
                 initial_node: Node,
                 next_time: int,
                 next_real_node: 'Zone'
-            ):
+            ) -> None:
         new_node: Node = self.create_node(next_time, next_real_node)
         new_node.add_connection(initial_node)
 
