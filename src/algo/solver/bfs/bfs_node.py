@@ -12,7 +12,7 @@ class BFSNode:
         self.capacity: int = capacity
         self.passage: int = 0
         self.edges: list[BFSEdge] = []
-        self._edges_ids_hash = None
+        self._edges_ids_hash: tuple[int, ...] = (-1, -1)
 
     def get_connected_nodes(self) -> list['BFSNode']:
         return [edge.node2 for edge in self.edges]
