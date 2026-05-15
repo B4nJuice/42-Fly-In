@@ -1,3 +1,4 @@
+"""Network visualization module using pyray graphics library."""
 from ..network.network import Network
 from ..network.zone.zone import Zone
 from ..network.metadata.zone_metadata import Color
@@ -11,7 +12,25 @@ from typing import Any, cast, Callable
 
 
 class Visualizer:
+    """Real-time visualization of drone network simulation using pyray.
+
+    Manages rendering of network topology, drone positions, and connections
+    with real-time updates through an action queue system.
+
+    Parameters
+    ----------
+    network : Network
+        The network to visualize.
+    """
+
     def __init__(self, network: Network) -> None:
+        """Initialize the visualizer.
+
+        Parameters
+        ----------
+        network : Network
+            The network to visualize.
+        """
         pyray.set_trace_log_level(7)
         self.network: Network = network
         self.action_queue: Queue[tuple[Callable[..., Any], list[Any]]] =\
@@ -25,6 +44,18 @@ class Visualizer:
 
     @staticmethod
     def _zone_color_to_pyray(zone_color: Color) -> pyray.Color:
+        """Convert zone metadata color to pyray color value.
+
+        Parameters
+        ----------
+        zone_color : Color
+            The zone color enum value.
+
+        Returns
+        -------
+        pyray.Color
+            The corresponding pyray color.
+        """
         color_map: dict[Color, pyray.Color] = {
             Color.NONE: pyray.BLUE,
             Color.BLUE: pyray.BLUE,
@@ -47,6 +78,18 @@ class Visualizer:
 
     @staticmethod
     def _get_zone_from_tile(tile: Tile) -> Zone | None:
+        """Extract a single zone from a tile if present.
+
+        Parameters
+        ----------
+        tile : Tile
+            The tile to search.
+
+        Returns
+        -------
+        Zone | None
+            The first zone found in the tile, or None if no zones present.
+        """
         for obj in tile.objects:
             if isinstance(obj, Zone):
                 return obj
@@ -58,6 +101,22 @@ class Visualizer:
                 step_x: int,
                 step_y: int
             ) -> tuple[int, int]:
+        """Get the center drawing position for a zone.
+
+        Parameters
+        ----------
+        zone : Zone
+            The zone to get position for.
+        step_x : int
+            Horizontal step size in pixels.
+        step_y : int
+            Vertical step size in pixels.
+
+        Returns
+        -------
+        tuple[int, int]
+            The (x, y) coordinates for drawing the zone.
+        """
         normalized_x, normalized_y = self.map.normalize_coords(
             zone.coords.x,
             zone.coords.y
@@ -67,6 +126,18 @@ class Visualizer:
 
     @staticmethod
     def _get_zones_from_tile(tile: Tile) -> list[Zone]:
+        """Extract all zones from a tile.
+
+        Parameters
+        ----------
+        tile : Tile
+            The tile to search.
+
+        Returns
+        -------
+        list[Zone]
+            List of all zones in the tile.
+        """
         return [obj for obj in tile.objects if isinstance(obj, Zone)]
 
     @staticmethod
@@ -78,6 +149,23 @@ class Visualizer:
                 max_height: int,
                 color: pyray.Color
             ) -> None:
+        """Draw text centered within specified bounds.
+
+        Parameters
+        ----------
+        text : str
+            The text to draw.
+        center_x : int
+            Center X coordinate.
+        center_y : int
+            Center Y coordinate.
+        max_width : int
+            Maximum width available.
+        max_height : int
+            Maximum height available.
+        color : pyray.Color
+            Text color.
+        """
         font_size = max(1, min(max_width, max_height))
         while font_size > 1 and (
                     pyray.measure_text(text, font_size) > max_width
@@ -113,6 +201,26 @@ class Visualizer:
                 center_y: int,
                 radius: int
             ) -> bool:
+        """Check if a point is within a circular area.
+
+        Parameters
+        ----------
+        point_x : int
+            X coordinate of the point.
+        point_y : int
+            Y coordinate of the point.
+        center_x : int
+            X coordinate of circle center.
+        center_y : int
+            Y coordinate of circle center.
+        radius : int
+            Radius of the circle.
+
+        Returns
+        -------
+        bool
+            True if point is within or on the circle.
+        """
         dx = point_x - center_x
         dy = point_y - center_y
         return (dx * dx) + (dy * dy) <= (radius * radius)
@@ -124,6 +232,29 @@ class Visualizer:
                 step_x: int,
                 step_y: int
             ) -> tuple[int, int]:
+        """Calculate draw position for a zone accounting for overlaps.
+
+        Parameters
+        ----------
+        tile : Tile
+            The tile containing the zone.
+        zone : Zone
+            The zone to draw.
+        step_x : int
+            Horizontal step size in pixels.
+        step_y : int
+            Vertical step size in pixels.
+
+        Returns
+        -------
+        tuple[int, int]
+            The (x, y) coordinates to draw the zone.
+
+        Notes
+        -----
+        When multiple zones occupy the same tile, they are arranged
+        in a grid pattern to avoid overlap.
+        """
         zones = self._get_zones_from_tile(tile)
         center_x = self.tile_padding + tile.coords.x * step_x + (step_x // 2)
         center_y = self.tile_padding + tile.coords.y * step_y + (step_y // 2)
@@ -157,6 +288,23 @@ class Visualizer:
                 mouse_x: int,
                 mouse_y: int
             ) -> None:
+        """Draw/refresh a tile and its zones.
+
+        Parameters
+        ----------
+        tile : Tile
+            The tile to draw.
+        step_x : int
+            Horizontal step size in pixels.
+        step_y : int
+            Vertical step size in pixels.
+        radius : int
+            Radius for zone circle drawing.
+        mouse_x : int
+            Current mouse X position for hover detection.
+        mouse_y : int
+            Current mouse Y position for hover detection.
+        """
         zones = self._get_zones_from_tile(tile)
         if not zones:
             return
@@ -174,7 +322,7 @@ class Visualizer:
             pyray.draw_circle(center_x, center_y, radius, color)
             n_drones: int = len(zones[0].drones)
             if len(zones[0].drones) > 0:
-                marker_radius = max(1, int(radius * 0.35))
+                marker_radius = max(1, int(radius * 0.55))
                 pyray.draw_circle(
                     center_x,
                     center_y,
@@ -225,6 +373,12 @@ class Visualizer:
                 )
 
     def draw_map(self) -> None:
+        """Render the complete network visualization at current step.
+
+        Draws all zones, connections between zones, and drones on their
+        connections. Updates the visualization to match the simulation
+        state at the current step.
+        """
         self.network.apply_state_at_step(self.step)
 
         if not self.map.map:
@@ -311,6 +465,16 @@ class Visualizer:
             pass
 
     def create_map(self) -> None:
+        """Create and initialize the visualization map.
+
+        Calculates bounding box of all zones in the network and creates
+        a tile-based map representation with zones placed at their coordinates.
+
+        Raises
+        ------
+        ValueError
+            If no zones exist in the network.
+        """
         if not self.network.zones:
             raise ValueError("No zones found in network.")
 
@@ -341,6 +505,17 @@ class Visualizer:
                 args: list[Any] | None = None,
                 persistent: bool = False
             ) -> None:
+        """Add an action (function call) to execute in the render loop.
+
+        Parameters
+        ----------
+        function : Callable
+            The function to call.
+        args : list[Any] | None, optional
+            Arguments to pass to the function.
+        persistent : bool, optional
+            If True, the action repeats every frame.
+        """
         if args is None:
             args = []
         if persistent:
@@ -350,6 +525,18 @@ class Visualizer:
         self.action_queue.put((function, args))
 
     def call_action_from_queue(self, persistent: bool = False) -> Any:
+        """Execute and optionally repeat an action from the queue.
+
+        Parameters
+        ----------
+        persistent : bool, optional
+            Whether to re-queue the action after execution.
+
+        Returns
+        -------
+        Any
+            The return value of the executed function.
+        """
         queue = self.frame_action_queue if persistent else self.action_queue
         function, args = queue.get()
         result = function(*args)
@@ -360,10 +547,24 @@ class Visualizer:
         return result
 
     def _execute_pending_actions(self) -> None:
+        """Execute all pending actions queued for immediate execution."""
         while not self.action_queue.empty():
             self.call_action_from_queue()
 
     def process_keys(self, key_pressed: int) -> None:
+        """Process keyboard input for visualization navigation.
+
+        Parameters
+        ----------
+        key_pressed : int
+            The pyray key code pressed by the user.
+
+        Notes
+        -----
+        Supported keys:
+        - Left arrow (263): Decrease simulation step
+        - Right arrow (262): Increase simulation step
+        """
         match key_pressed:
             case 263:  # pyray.KEY_LEFT:
                 self.update_step(-1)
@@ -372,9 +573,26 @@ class Visualizer:
                 self.update_step(1)
 
     def update_step(self, add: int) -> None:
+        """Update the current simulation step being displayed.
+
+        Parameters
+        ----------
+        add : int
+            The number of steps to add (can be negative).
+
+        Notes
+        -----
+        The step is clamped between 0 and the network's max_frames.
+        """
         self.step = min(self.network.max_frames, max(0, self.step + add))
 
     def start_display(self) -> None:
+        """Initialize and start the visualization display loop.
+
+        Sets up the pyray window with appropriate size and position,
+        initializes the render loop with persistent drawing actions,
+        and handles keyboard input processing.
+        """
         pyray.init_window(1, 1, "Fly-In")
 
         monitor = pyray.get_current_monitor()

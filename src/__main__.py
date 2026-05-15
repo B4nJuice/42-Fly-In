@@ -1,3 +1,11 @@
+"""Main entry point for the Fly-In drone delivery simulator.
+
+This module orchestrates the complete workflow:
+1. Parse map configuration from a file
+2. Build and verify the network
+3. Compute optimal drone routes using BFS and DFS
+4. Display results and launch visualization
+"""
 from argparse import ArgumentParser
 
 from .parser.parser import Parser

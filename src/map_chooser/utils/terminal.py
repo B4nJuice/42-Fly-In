@@ -34,6 +34,15 @@ class TerminalStyler():
 
     @staticmethod
     def redraw_line_at_x(line: str, x: int) -> None:
+        """Redraw a line at a specific vertical position.
+
+        Parameters
+        ----------
+        line : str
+            The line to draw.
+        x : int
+            The vertical offset.
+        """
         print(f"\x1b[{x}A", end="", flush=True)
         TerminalStyler.clear_current_line()
         print(line)
@@ -41,6 +50,13 @@ class TerminalStyler():
 
     @staticmethod
     def clear_x_lines(x: int) -> None:
+        """Clear X lines above the current cursor position.
+
+        Parameters
+        ----------
+        x : int
+            Number of lines to clear.
+        """
         for i in range(x):
             print("\x1b[1A", end="", flush=True)
             TerminalStyler.clear_current_line()
@@ -68,6 +84,14 @@ class TerminalStyler():
 
     @staticmethod
     def get_key() -> str:
+        """Read a single key press from stdin, including escape sequences.
+
+        Returns
+        -------
+        str
+            The key pressed, including multi-character escape sequences for
+            arrow keys and other special keys.
+        """
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)

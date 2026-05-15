@@ -1,10 +1,33 @@
+"""BFS node representation for breadth-first search."""
 from src.algo.time_graph.node import Node
 from src.network.metadata.zone_metadata import ZoneType
 from typing import Any
 
 
 class BFSNode:
+    """A node in the breadth-first search graph.
+
+    Parameters
+    ----------
+    node : Node
+        The corresponding time-graph node.
+    level : int
+        The BFS level (distance from start).
+    capacity : int
+        Maximum number of drones that can pass through this node.
+    """
     def __init__(self, node: Node, level: int, capacity: int) -> None:
+        """Initialize a BFS node.
+
+        Parameters
+        ----------
+        node : Node
+            The time-graph node this BFS node represents.
+        level : int
+            The BFS level.
+        capacity : int
+            The capacity constraint.
+        """
         from .bfs_edge import BFSEdge
 
         self.node: Node = node
@@ -15,12 +38,33 @@ class BFSNode:
         self._edges_ids_hash: tuple[int, ...] = (-1, -1)
 
     def get_connected_nodes(self) -> list['BFSNode']:
+        """Get all nodes connected from this node.
+
+        Returns
+        -------
+        list[BFSNode]
+            List of connected BFS nodes via outgoing edges.
+        """
         return [edge.node2 for edge in self.edges]
 
     def get_remaining_capacity(self) -> int:
+        """Get the remaining available capacity at this node.
+
+        Returns
+        -------
+        int
+            Remaining capacity = total capacity - current passage.
+        """
         return self.capacity - self.passage
 
     def sort_edges(self) -> list[Any]:
+        """Sort edges by priority (non-priority zones first).
+
+        Returns
+        -------
+        list[Any]
+            Sorted edge list, cached when edge set is unchanged.
+        """
         from .bfs_edge import BFSEdge
 
         current_edges_ids = tuple(id(edge) for edge in self.edges)

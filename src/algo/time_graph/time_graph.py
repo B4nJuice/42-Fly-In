@@ -1,3 +1,4 @@
+"""Time-expanded graph for temporal pathfinding."""
 from src.network.network import Network
 from src.network.metadata.zone_metadata import ZoneType
 from functools import lru_cache
@@ -12,7 +13,23 @@ if TYPE_CHECKING:
 
 
 class TimeGraph:
+    """Time-expanded graph representation of the network.
+
+    Expands zones and connections over time steps for pathfinding algorithms.
+
+    Parameters
+    ----------
+    network : Network
+        The network to expand in time.
+    """
     def __init__(self, network: Network) -> None:
+        """Initialize a time-expanded graph.
+
+        Parameters
+        ----------
+        network : Network
+            The network to expand.
+        """
         self.network: Network = network
         self.nodes: list[Node] = []
         self.step: int = 0
@@ -22,6 +39,18 @@ class TimeGraph:
 
     @staticmethod
     def get_real_nodes(nodes: set[Node]) -> set['Zone']:
+        """Extract the real zones from a set of time-graph nodes.
+
+        Parameters
+        ----------
+        nodes : set[Node]
+            Time-graph nodes.
+
+        Returns
+        -------
+        set[Zone]
+            The set of real zones these nodes represent.
+        """
         return {node.real_node for node in nodes}
 
     def add_connection(
@@ -30,6 +59,17 @@ class TimeGraph:
                 next_time: int,
                 next_real_node: 'Zone'
             ) -> None:
+        """Add a connection in the time-expanded graph.
+
+        Parameters
+        ----------
+        initial_node : Node
+            The source node.
+        next_time : int
+            The time step of the destination.
+        next_real_node : Zone
+            The destination zone.
+        """
         new_node: Node = self.create_node(next_time, next_real_node)
         new_node.add_connection(initial_node)
 
@@ -40,12 +80,34 @@ class TimeGraph:
                 real_node: 'Zone',
                 node_type: type[Node] = Node
             ) -> Node:
+        """Create or retrieve a time-graph node.
 
+        Parameters
+        ----------
+        time : int
+            The time step.
+        real_node : Zone
+            The zone.
+        node_type : type[Node], optional
+            The node class to instantiate (cached).
+
+        Returns
+        -------
+        Node
+            The created or cached node.
+        """
         created_node: Node = node_type(time, real_node)
         self.nodes.append(created_node)
         return created_node
 
     def next_step(self) -> None:
+        """Advance the time-expanded graph by one time step.
+
+        Raises
+        ------
+        ConfigError
+            If the end_hub becomes unreachable.
+        """
         current_nodes = self.step_dict.get(self.step, set())
         previous_nodes = self.step_dict.get(self.step - 1, set())
         previous_previous_nodes = self.step_dict.get(self.step - 2, set())

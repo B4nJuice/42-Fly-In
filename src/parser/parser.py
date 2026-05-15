@@ -1,3 +1,4 @@
+"""Parsing module for loading map configurations from files."""
 from typing import Any
 
 from ..network.zone.zone import Zone
@@ -10,13 +11,45 @@ from .config_parser import Config, ConfigError
 
 
 class FormatError(Exception):
+    """Exception raised when map file format is invalid.
+
+    Parameters
+    ----------
+    message : str
+        Description of the format error.
+    """
     def __init__(self, message: str):
+        """Initialize FormatError with a formatted message.
+
+        Parameters
+        ----------
+        message : str
+            The error message.
+        """
         super().__init__(f"Format Error: {message}")
 
 
 class MapConfig(Config):
+    """Configuration parser for map files."""
     @staticmethod
     def get_unprocessed_value(line: str) -> tuple[str, str]:
+        """Extract parameter and value from a configuration line.
+
+        Parameters
+        ----------
+        line : str
+            A configuration line in format "parameter: value".
+
+        Returns
+        -------
+        tuple[str, str]
+            A tuple of (parameter, value) with whitespace stripped.
+
+        Raises
+        ------
+        ConfigError
+            If the line format is invalid or parameter is missing.
+        """
         if ":" not in line:
             raise ConfigError(f"undefined config line : {line}")
 
@@ -31,12 +64,43 @@ class MapConfig(Config):
 
 
 class Parser:
+    """Parser for loading network maps from configuration files.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the map configuration file to parse.
+    """
     def __init__(self, file_path: str) -> None:
+        """Initialize the parser with a file path.
+
+        Parameters
+        ----------
+        file_path : str
+            Path to the map configuration file.
+        """
         self.file_path: str = file_path
         self.network = Network()
 
     @staticmethod
     def parse_zone(raw_value: str) -> Zone:
+        """Parse a zone definition from a string.
+
+        Parameters
+        ----------
+        raw_value : str
+            Zone definition in format "name x y [metadata]".
+
+        Returns
+        -------
+        Zone
+            The parsed zone object.
+
+        Raises
+        ------
+        FormatError
+            If the zone definition format is invalid.
+        """
         datas = raw_value.strip().split(maxsplit=3)
         name: str = ""
         coords: Coords = Coords()
@@ -63,6 +127,23 @@ class Parser:
 
     @staticmethod
     def parse_connection(raw_value: str) -> Connection:
+        """Parse a connection definition from a string.
+
+        Parameters
+        ----------
+        raw_value : str
+            Connection definition in format "zone1-zone2 [metadata]".
+
+        Returns
+        -------
+        Connection
+            The parsed connection object.
+
+        Raises
+        ------
+        FormatError
+            If the connection definition format is invalid.
+        """
         datas = raw_value.strip().split(maxsplit=1)
         name: str = ""
         metadata: ConnectionMetadata | None = None
@@ -86,6 +167,18 @@ class Parser:
 
     @staticmethod
     def to_list(value: Any) -> list[Any]:
+        """Convert a value to a list.
+
+        Parameters
+        ----------
+        value : Any
+            The value to convert. None becomes empty list, lists are unchanged.
+
+        Returns
+        -------
+        list[Any]
+            The value as a list.
+        """
         if value is None:
             return []
         if isinstance(value, list):
@@ -93,6 +186,13 @@ class Parser:
         return [value]
 
     def make_config(self) -> MapConfig:
+        """Create and configure a MapConfig parser.
+
+        Returns
+        -------
+        MapConfig
+            A configured MapConfig object with parameter specifications.
+        """
         config = MapConfig()
         config.add_parameter("nb_drones", [0, [int]])
         config.add_parameter("start_hub", [None, [Parser.parse_zone]])
@@ -102,6 +202,18 @@ class Parser:
         return config
 
     def parse_map(self) -> Network:
+        """Parse the map file and build the network.
+
+        Returns
+        -------
+        Network
+            The loaded network with all zones and connections.
+
+        Raises
+        ------
+        ConfigError
+            If the map file format is invalid or doesn't start with nb_drones.
+        """
         config = self.make_config()
 
         with open(self.file_path, "r") as opened_file:

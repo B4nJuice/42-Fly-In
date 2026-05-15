@@ -1,3 +1,4 @@
+"""BFS algorithm for finding paths in the time-expanded graph."""
 from src.algo.time_graph.time_graph import TimeGraph
 from src.algo.time_graph.node import Node
 from src.network.connection.connection import Connection
@@ -8,7 +9,21 @@ from typing import cast
 
 
 class BFS:
+    """Breadth-first search for path finding in the network.
+
+    Parameters
+    ----------
+    time_graph : TimeGraph
+        The time-expanded graph to search on.
+    """
     def __init__(self, time_graph: TimeGraph) -> None:
+        """Initialize BFS with a time-expanded graph.
+
+        Parameters
+        ----------
+        time_graph : TimeGraph
+            The search graph.
+        """
         self.time_graph: TimeGraph = time_graph
         self.start_node: BFSNode = cast(BFSNode, self.create_bfs_node(
                 list(
@@ -26,6 +41,7 @@ class BFS:
             )
 
     def next_level(self) -> None:
+        """Expand BFS to the next level."""
         current_level_nodes = list(self.bfs_level.get(self.actual_level, []))
         if not current_level_nodes:
             return
@@ -43,6 +59,13 @@ class BFS:
             self.search_edges(node)
 
     def search_edges(self, node: BFSNode) -> None:
+        """Search for edges from a node to future nodes.
+
+        Parameters
+        ----------
+        node : BFSNode
+            The node to search from.
+        """
         for node2, connection in node.node.connections:
             if node2.time <= node.node.time:
                 continue
@@ -63,6 +86,7 @@ class BFS:
                     node.edges.append(edge)
 
     def grow_with_time_step(self) -> None:
+        """Grow the search graph by advancing time by one step."""
         self.time_graph.next_step()
 
         max_known_level: int = max(self.bfs_level.keys(), default=0)
@@ -81,6 +105,20 @@ class BFS:
 
     @lru_cache(maxsize=None)
     def create_bfs_node(self, node: Node, level: int) -> BFSNode | None:
+        """Create a BFS node if the zone has positive capacity.
+
+        Parameters
+        ----------
+        node : Node
+            The time-graph node to convert.
+        level : int
+            The BFS level.
+
+        Returns
+        -------
+        BFSNode | None
+            A new BFS node, or None if capacity is non-positive.
+        """
         capacity: int = cast(int, node.real_node.metadata.metadata.get(
                 "max_drones"
             ))
@@ -96,6 +134,22 @@ class BFS:
                 node2: BFSNode,
                 real_connection: Connection | None
             ) -> BFSEdge | None:
+        """Create a BFS edge if it has positive capacity.
+
+        Parameters
+        ----------
+        node1 : BFSNode
+            Source BFS node.
+        node2 : BFSNode
+            Destination BFS node.
+        real_connection : Connection | None
+            The network connection, if any.
+
+        Returns
+        -------
+        BFSEdge | None
+            A new BFS edge, or None if capacity is non-positive.
+        """
         capacity: int = 0
 
         if real_connection is None:
