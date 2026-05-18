@@ -93,6 +93,28 @@ class BFS:
     def grow_with_time_step(self) -> None:
         """Grow the search graph by advancing time by one step."""
         self.time_graph.next_step()
+        
+        if self.actual_level > 2 and not self.end_reached:
+            current_bfs_nodes = self.bfs_level.get(self.actual_level, set())
+            previous_bfs_nodes = self.bfs_level.get(
+                    self.actual_level - 1, set()
+                )
+            previous_previous_bfs_nodes = self.bfs_level.get(
+                    self.actual_level - 2, set()
+                )
+            
+            current_real = {node.node.real_node for node in current_bfs_nodes}
+            previous_real = {
+                    node.node.real_node for node in previous_bfs_nodes
+                }
+            previous_previous_real = {
+                    node.node.real_node for node in previous_previous_bfs_nodes
+                }
+            
+            if (current_real == previous_real == previous_previous_real) and \
+               not any(n.metadata.end_hub for n in current_real):
+                from src.parser.config_parser import ConfigError
+                raise ConfigError("end_hub is not reachable.")
 
         max_known_level: int = max(self.bfs_level.keys(), default=0)
 

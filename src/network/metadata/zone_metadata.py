@@ -112,9 +112,9 @@ class ZoneMetadata(MetadataInterface):
         if diff := (self.metadata.keys() - self.default_metadata.keys()):
             raise MetadataError(f"Invalid metadata fields : {diff}")
 
-        if cast(int, self.metadata.get("max_drones")) <= 0:
+        if cast(int, self.metadata.get("max_drones")) < 0:
             raise MetadataError(
-                    "max_drones field has to be a positive integer."
+                    "max_drones field has to be a non-negative integer."
                 )
 
     def set_start_hub(self) -> None:

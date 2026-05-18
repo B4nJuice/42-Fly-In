@@ -112,16 +112,6 @@ class TimeGraph:
         previous_nodes = self.step_dict.get(self.step - 1, set())
         previous_previous_nodes = self.step_dict.get(self.step - 2, set())
 
-        if self.step > 2:
-            if (
-                    self.get_real_nodes(current_nodes)
-                    == self.get_real_nodes(previous_nodes)
-                    == self.get_real_nodes(previous_previous_nodes)
-                ) and not [n for n in self.get_real_nodes(
-                        current_nodes
-                    ) if n.metadata.end_hub]:
-                raise ConfigError("end_hub is not reachable.")
-
         for node in current_nodes:
             if isinstance(node, ConnectionNode):
                 destination_node: Node = self.create_node(
