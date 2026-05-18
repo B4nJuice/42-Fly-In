@@ -120,8 +120,8 @@ class DFS:
 
                     del path[path_len:]
                     visited_edges.discard(next_edge)
+                    visited.discard(next_node)
 
-        visited.discard(starting_node)
         dead_ends.add(starting_node)
         return None
 

@@ -66,6 +66,7 @@ class BFS:
         node : BFSNode
             The node to search from.
         """
+        
         for node2, connection in node.node.connections:
             if node2.time <= node.node.time:
                 continue
@@ -73,7 +74,11 @@ class BFS:
                 self.create_bfs_node(node2, node.level + 1)
 
             if new_node:
-                if any(edge.node2 == new_node for edge in node.edges):
+                if any(
+                        (
+                            edge.node2 if edge.node1 == node else edge.node1
+                        ) == new_node for edge in node.edges
+                    ):
                     continue
 
                 edge: BFSEdge | None = self.create_bfs_edge(
