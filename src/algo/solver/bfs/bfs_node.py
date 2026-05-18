@@ -1,7 +1,7 @@
 """BFS node representation for breadth-first search."""
 from src.algo.time_graph.node import Node
 from src.network.metadata.zone_metadata import ZoneType
-from typing import Any
+from typing import Any, cast
 
 
 class BFSNode:
@@ -35,7 +35,10 @@ class BFSNode:
         self.capacity: int = capacity
         self.passage: int = 0
         self.edges: list[BFSEdge] = []
-        self._edges_ids_hash: tuple[int, ...] = (-1, -1)
+        self._edges_ids_hash: tuple[BFSEdge, ...] = (
+                cast(BFSEdge, None),
+                cast(BFSEdge, None)
+            )
 
     def get_connected_nodes(self) -> list['BFSNode']:
         """Get all nodes connected from this node.
@@ -67,7 +70,7 @@ class BFSNode:
         """
         from .bfs_edge import BFSEdge
 
-        current_edges_ids = tuple(id(edge) for edge in self.edges)
+        current_edges_ids = tuple(edge for edge in self.edges)
 
         if self._edges_ids_hash == current_edges_ids:
             return self.edges
