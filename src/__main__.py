@@ -16,7 +16,7 @@ from .algo.solver.bfs.bfs import BFS
 from .algo.solver.dfs.dfs import DFS
 from .map_chooser.ui import ChooserUI
 from .ui.logger import Logger
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Union, cast
 
 if TYPE_CHECKING:
     from src.network.zone.zone import Zone
@@ -82,13 +82,17 @@ if __name__ == "__main__":
                 position_drone: Union['Connection', None] =\
                     drone.connection_by_step.get(level)
 
-                if not (last_position_drone and position_drone):
+                if (last_position_drone and position_drone):
                     continue
 
-                last_position: 'Zone' | 'Connection' = drone.zone_by_step.get(
+                last_position_drone = cast('Connection', last_position_drone)
+                position_drone = cast('Connection', position_drone)
+
+                last_position: Union['Zone', 'Connection'] =\
+                    drone.zone_by_step.get(
                         level - 1, last_position_drone
                     )
-                position: 'Zone' | 'Connection' = drone.zone_by_step.get(
+                position: Union['Zone', 'Connection'] = drone.zone_by_step.get(
                         level, position_drone
                     )
 
