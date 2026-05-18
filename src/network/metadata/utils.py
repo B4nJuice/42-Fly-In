@@ -44,7 +44,7 @@ class MetadataUtils:
     """Utility class for parsing and converting metadata strings."""
 
     @staticmethod
-    def transfrom_to_dict(metadata: str) -> dict[str, str]:
+    def transform_to_dict(metadata: str) -> dict[str, str]:
         """Parse metadata string into a dictionary.
 
         Parameters

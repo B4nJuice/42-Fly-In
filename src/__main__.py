@@ -110,5 +110,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         Logger.log_error(e)
-        raise e
         exit(1)

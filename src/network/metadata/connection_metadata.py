@@ -30,7 +30,7 @@ class ConnectionMetadata(MetadataInterface):
 
         converted_metadata: dict[str, Any] = {}
         converted_metadata = MetadataUtils.convert_metadata_types(
-            MetadataUtils.transfrom_to_dict(metadata),
+            MetadataUtils.transform_to_dict(metadata),
             self.types
         )
 
