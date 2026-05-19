@@ -35,7 +35,7 @@ if __name__ == "__main__":
         "--map-location", "-ml",
         dest="map_location",
         default="./maps",
-        help="Path to the map file to use."
+        help="Path to the map directory to use."
     )
     arg_parser.add_argument(
         "--output-file", "-o",

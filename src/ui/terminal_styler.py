@@ -1,4 +1,9 @@
 from enum import Enum
+import tty
+import sys
+import termios
+import fcntl
+import os
 
 
 class Colors(Enum):
@@ -13,7 +18,7 @@ class Colors(Enum):
     RED = "\033[31m"
 
 
-class TerminalStyler:
+class TerminalStyler():
     """Provide terminal styling helpers for line control and colors."""
 
     @staticmethod
@@ -26,6 +31,35 @@ class TerminalStyler:
             Writes ANSI control sequences to stdout.
         """
         print("\x1b[2K\x1b[G", end="", flush=True)
+
+    @staticmethod
+    def redraw_line_at_x(line: str, x: int) -> None:
+        """Redraw a line at a specific vertical position.
+
+        Parameters
+        ----------
+        line : str
+            The line to draw.
+        x : int
+            The vertical offset.
+        """
+        print(f"\x1b[{x}A", end="", flush=True)
+        TerminalStyler.clear_current_line()
+        print(line)
+        print(f"\x1b[{x}B", end="", flush=True)
+
+    @staticmethod
+    def clear_x_lines(x: int) -> None:
+        """Clear X lines above the current cursor position.
+
+        Parameters
+        ----------
+        x : int
+            Number of lines to clear.
+        """
+        for i in range(x):
+            print("\x1b[1A", end="", flush=True)
+            TerminalStyler.clear_current_line()
 
     @staticmethod
     def colored_text(colors: list[Colors], text: str) -> str:
@@ -47,3 +81,36 @@ class TerminalStyler:
         rendered_text += text
         rendered_text += Colors.RESET.value
         return rendered_text
+
+    @staticmethod
+    def get_key() -> str:
+        """Read a single key press from stdin, including escape sequences.
+
+        Returns
+        -------
+        str
+            The key pressed, including multi-character escape sequences for
+            arrow keys and other special keys.
+        """
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+
+        try:
+            tty.setraw(fd)
+
+            char = sys.stdin.read(1)
+
+            if char == "\x1b":
+                fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
+
+                try:
+                    char += sys.stdin.read(2)
+                except Exception:
+                    pass
+
+            return char
+
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            fcntl.fcntl(fd, fcntl.F_SETFL, old_flags)

@@ -1,6 +1,6 @@
 """Interactive UI for selecting map files."""
 from .map_chooser import MapChooser
-from .utils.terminal import TerminalStyler, Colors
+from src.ui.terminal_styler import TerminalStyler, Colors
 from src.parser.parser import Parser
 import contextlib
 import os
