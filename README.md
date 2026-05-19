@@ -69,7 +69,7 @@ Here's our network before its time-expansion.
 
 Here's the same network with a 3 step time-expension.
 
-![](https://media.discordapp.net/attachments/860546628564942878/1506265597712007228/image.png?ex=6a0da2a7&is=6a0c5127&hm=7f974ff602a09a9159bf3afd24911401ba00bcfe451884432902eee9c5c1f336&=&format=webp&quality=lossless)
+![](https://media.discordapp.net/attachments/860546628564942878/1506277673985376276/image.png?ex=6a0dade6&is=6a0c5c66&hm=ca95088cfacd1a03b9e3548bfce746c0f0b504dba8e653fe3b20dbde0fdd2ba0&=&format=webp&quality=lossless)
 
 **How the time-expanded network grows:**
 
