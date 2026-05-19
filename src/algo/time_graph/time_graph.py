@@ -2,7 +2,6 @@
 from src.network.network import Network
 from src.network.metadata.zone_metadata import ZoneType
 from functools import lru_cache
-from src.parser.config_parser import ConfigError
 from .node import Node
 from .connection_node import ConnectionNode
 
@@ -109,8 +108,6 @@ class TimeGraph:
             If the end_hub becomes unreachable.
         """
         current_nodes = self.step_dict.get(self.step, set())
-        previous_nodes = self.step_dict.get(self.step - 1, set())
-        previous_previous_nodes = self.step_dict.get(self.step - 2, set())
 
         for node in current_nodes:
             if isinstance(node, ConnectionNode):

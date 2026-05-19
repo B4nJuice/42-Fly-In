@@ -113,7 +113,7 @@ class ZoneMetadata(MetadataInterface):
             raise MetadataError(f"Invalid metadata fields : {diff}")
 
         if cast(int, self.metadata.get("max_drones")) <= 0 and not\
-            cast(ZoneType, self.metadata.get("zone")) == ZoneType.BLOCKED:
+                cast(ZoneType, self.metadata.get("zone")) == ZoneType.BLOCKED:
             raise MetadataError(
                     "max_drones field has to be a positive integer."
                 )
