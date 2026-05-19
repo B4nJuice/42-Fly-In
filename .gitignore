@@ -6,3 +6,4 @@ uv.lock
 output.txt
 .mypy_cache
 LICENSE
+.gitignore
