@@ -1,3 +1,5 @@
+# Should return an error (max_link_capacity/max_drones < 1)
+
 nb_drones: 1
 
 start_hub: start 0 0 [color=green]
