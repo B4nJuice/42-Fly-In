@@ -107,7 +107,8 @@ class DFS:
                     path.append(next_edge)
                     path.append(next_node)
 
-                    if next_node.node.real_node.metadata.end_hub:
+                    if next_node.node.real_node.metadata.end_hub and\
+                            not isinstance(next_node.node, ConnectionNode):
                         return path
 
                     new_path: list[BFSNode | BFSEdge] | None =\
